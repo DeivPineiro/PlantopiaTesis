@@ -1,0 +1,13 @@
+{
+  "appId": "com.plantopia.plantopiapp",
+  "appName": "plantopia",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "permissions": [
+      "android.permissions.ACCESS_FINE_LOCATION"
+    ]
+  }
+}

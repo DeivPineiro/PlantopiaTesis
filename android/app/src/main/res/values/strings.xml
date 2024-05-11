@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">plantopia</string>
+    <string name="title_activity_main">plantopia</string>
+    <string name="package_name">com.plantopia.plantopiapp</string>
+    <string name="custom_url_scheme">com.plantopia.plantopiapp</string>
+</resources>

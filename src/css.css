@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'MADE-TOMMY';
+  src: url('../fonts/MADE_TOMMY_Bold_PERSONAL_USE.otf') format('opentype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'MADE-TOMMY';
+  src: url('../fonts/MADE_TOMMY_Regular_PERSONAL_USE.otf') format('opentype');
+  font-weight: normal;
+}
+
+body {
+  font-family: 'MADE-TOMMY', sans-serif;
+}
+
+.loader {
+  height: 20px;
+  aspect-ratio: 2.5;
+  --_g: no-repeat radial-gradient(farthest-side, #e8e8e8 90%, #9f9c9c00);
+  background: var(--_g), var(--_g), var(--_g), var(--_g);
+  background-size: 15% 35%;
+  animation: l43 1s infinite linear;
+}
+
+@keyframes l43 {
+  0% {
+    background-position: calc(0*100%/3) 50%, calc(1*100%/3) 50%, calc(2*100%/3) 50%, calc(3*100%/3) 50%
+  }
+
+  16.67% {
+    background-position: calc(0*100%/3) 0, calc(1*100%/3) 50%, calc(2*100%/3) 50%, calc(3*100%/3) 50%
+  }
+
+  33.33% {
+    background-position: calc(0*100%/3) 100%, calc(1*100%/3) 0, calc(2*100%/3) 50%, calc(3*100%/3) 50%
+  }
+
+  50% {
+    background-position: calc(0*100%/3) 50%, calc(1*100%/3) 100%, calc(2*100%/3) 0, calc(3*100%/3) 50%
+  }
+
+  66.67% {
+    background-position: calc(0*100%/3) 50%, calc(1*100%/3) 50%, calc(2*100%/3) 100%, calc(3*100%/3) 0
+  }
+
+  83.33% {
+    background-position: calc(0*100%/3) 50%, calc(1*100%/3) 50%, calc(2*100%/3) 50%, calc(3*100%/3) 100%
+  }
+
+  100% {
+    background-position: calc(0*100%/3) 50%, calc(1*100%/3) 50%, calc(2*100%/3) 50%, calc(3*100%/3) 50%
+  }
+}
+
+.titulo-login {
+  font-weight: bold;
+  color: white;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+p.slogan-login {
+  text-align: center;
+  color: white;
+  text-transform: uppercase;
+  font-size: small;
+}
+
+span.slogan-login {
+  color: #2FD466;
+}
+
+.div-form {
+  padding-top: 25px;
+}
+
+label.login {
+  color: white;
+  font-size: smaller;
+  padding-left: 5px;
+  margin: 5px 0px;
+}
+
+input.login {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  padding: 0 5px;
+  font-size: small;
+  color: white;
+  font-weight: 100;
+  width: 100%;
+}
+
+input.login:focus-visible {
+  outline: none;
+  border-bottom: 2px solid white;
+}
+
+input.login:disabled {
+  color: #bdbdbd;
+  border-color: #bdbdbd;
+}
+
+.btn-verde {
+  display: inline-block;
+  width: 100%;
+  color: white;
+  padding: 5px;
+  letter-spacing: 1px;
+  margin: 0px;
+  font-weight: 100;
+  text-align: center;
+  background-color: #006633;
+  border-radius: 0px;
+  transition: background-color 0.3s ease;
+}
+
+p.registrarse {
+  text-align: center;
+  color: white;
+  padding: 5px 0;
+  font-size: small;
+}
+
+a.registrarse {
+  color: #2FD466;
+  font-weight: bold;
+  letter-spacing: 0.7px;
+}
+
+a.registrarse:hover {
+  text-decoration: underline;
+}
+
+.btn-verde:active,
+.btn-verde:disabled {
+  background-color: #0e462b;
+  color: #cecece;
+}
+
+.carga {
+  height: 24px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error {
+  color: #FF5526;
+  font-size: small;
+  text-align: left;
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-style: italic;
+}
+
+.bi-eye::before {
+  font-size: 20px;
+}
+
+.bi-eye-slash::before {
+  font-size: 20px;
+}
+
+.section-form {
+  background-color: #00000075;
+}
+
+.nav-principal {
+  background-color: #ffffff;
+  width: 100%;
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  border-top: 2px solid #7b7b7b;
+  box-shadow: 0px -8px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.lista-nav-principal {
+  display: flex;
+    justify-content: space-around;
+    height: 100%;
+    align-items: center;
+}
+
+.li-nav-principal {
+  text-align: center;
+  font-size: 11px;
+}
+
+.icono-home-nav {
+  border: 6px solid #fff8a1;
+    border-radius: 100%;
+    width: 62px;
+    position: relative;
+    top: -4px;
+}
+
+.material-symbols-outlined {
+  font-size: 27px;
+}
