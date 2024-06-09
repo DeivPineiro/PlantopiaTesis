@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="h-screen w-screen bg-slate-400">
+  <div id="app" class="h-screen w-screen">
     <transition name="fade">
       <img v-if="showWelcomeImage" src="/imgs/inicio.jpg" alt="Imagen de bienvenida"
         class="w-screen h-screen object-cover" style="position: absolute; top: 0; left: 0;" />
@@ -10,8 +10,8 @@
         style="width: 300px; height: 300px; position: absolute; top: 75%; left: 50%; transform: translate(-50%, -50%); width: 40%;"
         loop autoplay></dotlottie-player>
     </div>
-    <div v-if="!showWelcomeImage" class="h-full"
-      style="overflow-y: auto; background-image: url('/imgs/backMenu.png'); background-size: cover; background-position: center;">
+    <div v-if="!showWelcomeImage" class="h-full fondo-app"
+     >
       <router-view></router-view>
     </div>
   </div>

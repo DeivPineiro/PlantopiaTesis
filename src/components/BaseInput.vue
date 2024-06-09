@@ -1,6 +1,6 @@
 <template>
     <input
-      class=""
+      class="input-base"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     />
@@ -18,5 +18,3 @@ export default {
 
 }
 </script>
-<style></style>
-

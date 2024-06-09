@@ -1,61 +1,72 @@
-<template >
-    <div class="max-w-lg mx-auto py-8 px-4">
-        <BaseH1 class="text-center mb-8">TU CULTIVO</BaseH1>
-        <router-link to="/home" class="absolute top-7 left-1 scale-75">
-            <button class=" m-0 flex items-center justify-center bg-gray-300 px-3 rounded-md shadow-2xl">
-                <img src="/imgs/back.png" alt="back">Atras
-            </button>
-        </router-link>
-        <div v-if="lastArea">
-            <div class="text-center overflow-x-hidden">
-                <p class="mb-4 w-full inline-block font-bold text-green-800">Área seleccionada: {{
+<template>
+    <section class=" h-screen">
+        <div class="header-map">
+            <router-link to="/home" class="back-map">
+                <button class="btn-amarillo">
+                    <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
+                </button>
+            </router-link>
+            <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
+        </div>
+        <div class="container px-4 mx-auto div-form fondo-blanco">
+            <div class="header-form">
+                <BaseH1 class="text-center">TU CULTIVO</BaseH1>
+            </div>
+            <div v-if="lastArea">
+                <p class="slogan-form">Área seleccionada <span> {{
                     lastArea.areaKilometros.toFixed(3) }}
-                    km²</p>
+                        km²</span></p>
                 <p class="mb-4 w-full text-white hidden">Coordenadas: {{ lastArea.poligons }}</p>
             </div>
+            <form action="#" @submit.prevent="CrearArea">
+                <div class="max-w-lg mx-auto py-4">
+                    <div class="mb-6">
+                        <BaseLabel for="nombreCosecha">Identifica a tu cultivo</BaseLabel>
+                        <BaseInput type="text" id="nombreCosecha" v-model="nombreCosecha" />
+                    </div>
+                    <div class="mb-6">
+                        <BaseLabel for="pesoPorCosecha">Peso proyectado (kg/km²)</BaseLabel>
+                        <BaseInput type="number" id="pesoPorCosecha" v-model="pesoPorCosecha" />
+                    </div>
+                    <div class="mb-6">
+                        <BaseLabel for="valorPorTonelada">Valor por Tonelada (USD$)</BaseLabel>
+                        <BaseInput type="number" id="valorPorTonelada" v-model="valorPorTonelada" />
+                    </div>
+                    <div class="mb-6">
+                        <BaseLabel for="diaPlantacion">Dia de plantacion</BaseLabel>
+                        <BaseInput type="date" id="diaPlantacion" v-model="valorPorTonelada" />
+                    </div>
+                    <div class="mb-6">
+                        <BaseLabel for="diaCosecha">Dia de cosecha estimada</BaseLabel>
+                        <BaseInput type="date" id="diaCosecha" v-model="valorPorTonelada" />
+                    </div>
+                    <div class="mb-6">
+                        <BaseLabel for="colorArea">Color del área</BaseLabel>
+                        <select class="input-base" id="colorArea" v-model="colorArea">
+                            <option value="red">Rojo </option>
+                            <option value="blue">Azul</option>
+                            <option value="green">Verde</option>
+                            <option value="yellow">Amarillo</option>
+                            <option value="orange">Naranja</option>
+                            <option value="purple">Purpura</option>
+                            <option value="pink">Rosa</option>
+                            <option value="black">Negro</option>
+                            <option value="white">Blanco</option>
+                            <option value="gray">Gris</option>
+                            <option value="brown">Marron</option>
+                            <option value="cyan">Cyan</option>
+                            <option value="magenta">Magenta</option>
+                        </select>
+                    </div>
+                    <button @click="preCalcular" class="btn-amarillo mb-6">Pre-Calcular</button>
+                    <div>
+                        <Notificacion v-if="showNotification" :type="notificationType" :message="notificationMessage" />
+                    </div>
+                    <BaseButton @click="guardar" class="mt-10">Guardar</BaseButton>
+                </div>
+            </form>
         </div>
-        <form action="#" @submit.prevent="CrearArea">
-            <div class="mb-2">
-                <BaseLabel for="nombreCosecha">Identifica a tu cultivo</BaseLabel>
-                <BaseInput type="text" id="nombreCosecha" v-model="nombreCosecha" />
-            </div>
-            <div class="mb-2">
-                <BaseLabel for="pesoPorCosecha">Peso proyectado (kg/km²)</BaseLabel>
-                <BaseInput type="number" id="pesoPorCosecha" v-model="pesoPorCosecha" />
-            </div>
-            <div class="mb-2">
-                <BaseLabel for="valorPorTonelada">Valor por Tonelada (USD$)</BaseLabel>
-                <BaseInput type="number" id="valorPorTonelada" v-model="valorPorTonelada" />
-            </div>
-            <div class="mb-2">
-                <BaseLabel for="colorArea">Color del área</BaseLabel>
-                <select
-                    class="px-2 rounded-md disabled:bg-slate-300 w-full p-4 leading-6 text-lg placeholder-gray-400 bg-white shadow-none border border-gray-300"
-                    id="colorArea" v-model="colorArea">
-                    <option value="red">Rojo</option>
-                    <option value="blue">Azul</option>
-                    <option value="green">Verde</option>
-                    <option value="yellow">Amarillo</option>
-                    <option value="orange">Naranja</option>
-                    <option value="purple">Purpura</option>
-                    <option value="pink">Rosa</option>
-                    <option value="black">Negro</option>
-                    <option value="white">Blanco</option>
-                    <option value="gray">Gris</option>
-                    <option value="brown">Marron</option>
-                    <option value="cyan">Cyan</option>
-                    <option value="magenta">Magenta</option>
-                </select>
-            </div>
-
-            <button @click="preCalcular" class="bg-blue-500 text-white py-2 px-4 rounded">Pre-Calcular</button>
-
-            <BaseButton @click="guardar" class="mt-10">Guardar</BaseButton>
-        </form>
-    </div>
-    <div>
-        <Notificacion v-if="showNotification" :type="notificationType" :message="notificationMessage" />
-    </div>
+    </section>
 </template>
 
 <script>
@@ -141,4 +152,4 @@ export default {
     },
 }
 </script>
-<style ></style>
+<style></style>

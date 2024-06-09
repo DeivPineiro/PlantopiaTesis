@@ -1,33 +1,35 @@
 <template>
-    <div class="h-screen bg-slate-400">
+    <div class="h-screen">
         <BaseH1 class="text-center text-3xl hidden">Menú Principal</BaseH1>
         <!-- NAVBAR -->
-
         <nav class="container px-6 py-2 mx-auto md:flex md:justify-between md:items-center relative">
             <div class="flex items-center justify-between">
-                <router-link to="/home" class="text-xl font-bold text-gray-800 md:text-2xl hover:text-blue-400">
-                    <img src="/imgs/mock60.png" alt="">
-                </router-link>
-                <div @click="showMenu = !showMenu" class="flex md:hidden">
-                    <button type="button"
-                        class="text-gray-800 hover:text-gray-400 focus:outline-none focus:text-gray-400">
-                        <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current">
-                            <path fill-rule="evenodd"
-                                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z">
-                            </path>
-                        </svg>
+                <div @click="showMenu = !showMenu" class="flex">
+                    <button type="button" class="btn_user">
+                        <span class="material-symbols-sharp user_icon">
+                            account_circle
+                        </span>
+                        <p class="ps-2">Hola {{ getEmailPrefix(user.email) }}</p>
                     </button>
                 </div>
-            </div>
-            <ul :class="showMenu ? 'flex' : 'hidden'"
-                class="absolute top-full pl-4 left-0 w-full bg-slate-200 z-10 flex-col mt-0 md:relative md:flex md:flex-row md:items-center md:space-x-10 md:mt-0">
-
-                <div class="flex items-center">
-                    <router-link to="/perfil"></router-link>
-                    <button @click="toggleMenu" class="md:px-4 py-1 text-green-600">Usuario</button>
+                <div class="box_user" :class="showMenu ? 'flex' : 'hidden'">
+                    <ul class="py-2">
+                        <li class="li_user">
+                            <router-link to="/perfil" class="text-xs p-1">
+                                Mi Perfil
+                            </router-link>
+                        </li>
+                        <li class="li_user">
+                            <form action="#" @submit.prevent="logOuting">
+                                <button class="text-xs text-red-600 p-1 " type="submit">Cerrar
+                                    sesión<span class="material-symbols-sharp">
+                                        logout
+                                    </span></button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-            </ul>
-
+            </div>
         </nav>
 
         <nav class="nav-principal">
@@ -44,36 +46,27 @@
                         class="material-symbols-sharp">book_3</span><br>PlantoWiki</li>
             </ul>
         </nav>
-        <!-- USER -->
-        <div v-if="showUser && showMenu" class="absolute right-2 top-56 w-52 mt-0 border border-gray-950 shadow-xl">
-            <ul class="list-none bg-slate-200">
-                <li class="text-center px-0 mb-2 ">
-                    <router-link to="/perfil" class="font-bold text-xs text-green-600 p-1">
-                        {{ user.email }}
-                    </router-link>
-                </li>
-                <li class="text-center px-0 ">
-                    <form action="#" @submit.prevent="logOuting">
-                        <button class="text-center font-bold text-xs text-red-600 p-1 " type="submit">Cerrar
-                            sesión</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
+
         <!-- GRAFICO -->
-        <div class="pt-5 flex items-center justify-center">
-            <div v-if="!areas || areas.length === 0" class="text-center font-bold text-gray-600 mt-4">
-                <p>No tienes áreas cargadas.</p>
-            </div>
-            <div class="text-center chart-container" ref="chartContainer">
-                <h2 class="mb-4 text-2xl font-bold text-green-800">Tus Estadisticas</h2>
-                <svg ref="svgChart"></svg>
-            </div>
+        <div class="pt-5  home">
+            <template v-if="!areas || areas.length === 0">
+                <div class="text-center font-bold text-gray-600 mt-4">
+                    <p>No tienes áreas cargadas.</p>
+                </div>
+            </template>
+            <template v-else>
+                <div class="text-center chart-container">
+                    <h2 class="mb-4 text-2xl font-bold text-green-800">Tus Estadisticas</h2>
+                    <LineChart :labels="labels" :data1="data1" :data2="data2" />
+                </div>
+                <div class="max-w-md mx-auto text-left mt-0 bg-slate-300 p-2 rounded-md shadow-2xl">
+                    <p>Cobertura total: {{ coberturaTotal }} km²</p>
+                    <p>Valor cosechas: {{ totalValorAreas.toFixed(2) }} USD$</p>
+                </div>
+            </template>
+
         </div>
-        <div class="max-w-md mx-auto text-left mt-0 bg-slate-300 p-2 rounded-md shadow-2xl">
-            <p>Cobertura total: {{ coberturaTotal }} km²</p>
-            <p>Valor cosechas: {{ totalValorAreas.toFixed(2) }} USD$</p>
-        </div>
+
     </div>
 </template>
 
@@ -81,10 +74,13 @@
 import BaseH1 from '../components/BaseH1.vue';
 import { subscribeToAuth, logOut } from '../service/auth.js';
 import { findUserAreas } from "./../service/area.js";
+import LineChart from '../components/LineChart.vue';
+import { ref } from 'vue';
+
 import * as d3 from 'd3';
 export default {
     name: 'home',
-    components: { BaseH1 },
+    components: { BaseH1, LineChart },
 
     data() {
         return {
@@ -101,8 +97,23 @@ export default {
             totalValorAreas: 0
         }
     },
+    setup() {
+        const labels = ref(['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']);
+        const data1 = ref({
+            nombre: 'Plantacion',
+            valores: [65, 59, 200, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55]
+        });
+        const data2 = ref({
+            nombre: 'Cosecha',
+            valores: [null, 48, 40, 19, 86, 27, 90, 28, 48, 40, 19, 86, 27]
+        });
 
+        return { labels, data1, data2 };
+    },
     methods: {
+        getEmailPrefix(email) {
+            return email && email.includes('@') ? email.split('@')[0] : email;
+        },
         toggleMenu() {
             this.showUser = !this.showUser;
         },
@@ -176,6 +187,7 @@ export default {
                     }
                 });
             }
+            console.log(this.areas);
             return areasPorFecha;
         },
         calcularCoberturaTotal() {

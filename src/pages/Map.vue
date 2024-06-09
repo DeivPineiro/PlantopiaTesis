@@ -1,24 +1,21 @@
 <template>
     <BaseH1 class="hidden">Mapa</BaseH1>
-    <div style="max-height: 100vh; overflow-y: auto;">
-        <div id="mapContainer" class="h-screen relative">
-            <div id="map" class="w-full h-full"></div>
-            <router-link to="/home" class="absolute top-14 left-0 scale-75">
-                <button class=" m-0 flex items-center justify-center bg-gray-300 px-3 rounded-md shadow-2xl">
-                    <img src="/imgs/back.png" alt="back">Atras
+    <div class="h-screen">
+        <div class="header-map">
+            <router-link to="/home" class="back-map">
+                <button class="btn-amarillo">
+                    <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
                 </button>
             </router-link>
-            <div id="areaKilometros"
-                class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 rounded-xl p-2 z-10 text-sm opacity-90">
-                <div>
-                    <p>{{ areaText }}</p>
-                </div>
+            <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
+            <div id="areaKilometros" class="info-map">
+                <p>{{ areaText }}</p>
             </div>
-            <div id="buttonContainer" class="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-10">
-                <button @click="handleSubmit()"
-                    class="bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md border border-amber-800">
-                    Finalizar
-                </button>
+        </div>
+        <div id="mapContainer" class="vista-map">
+            <div id="map" class="w-full h-full"></div>
+            <div id="buttonContainer" class="finish-map">
+                <BaseButton @click="handleSubmit()" :cargando="formCarga" class="mt-10">Finalizar</BaseButton>
             </div>
         </div>
     </div>
@@ -28,9 +25,11 @@ import { CreateArea } from "../service/area.js";
 import { subscribeToAuth } from "./../service/auth.js";
 import googleMapsLoader from "../service/google-maps-config.js";
 import BaseH1 from "../components/BaseH1.vue";
+import BaseButton from '../components/BaseButton.vue';
+
 export default {
     name: 'mapa',
-    components: { BaseH1 },
+    components: { BaseH1, BaseButton },
 
     data() {
         return {
@@ -38,6 +37,7 @@ export default {
                 id: null,
                 email: null,
             },
+            formCarga: false,
             map: null,
             polygonCoords: [],
             areaKilometros: 0,
@@ -121,8 +121,9 @@ export default {
         },
         async handleSubmit() {
             try {
+                this.formCarga = true;
                 this.unsuscribe = subscribeToAuth(newUser => this.user = { ...newUser });
-                await CreateArea(this.user.id, { poligons: JSON.stringify(this.polygonCoords), areaKilometros: this.areaKilometros, idUser: this.user.id });
+                await CreateArea(this.user.id, { poligons: JSON.stringify(this.polygonCoords), areaKilometros: this.areaKilometros, fechaCultivo: 1, fechaCoseche: 2, idUser: this.user.id });
                 this.$router.push('/area');
             } catch (error) {
                 console.log(error);
@@ -131,7 +132,7 @@ export default {
     },
 };
 </script>
-  
+
 <style>
 body {
     margin: 0;
@@ -139,7 +140,3 @@ body {
     overflow: hidden;
 }
 </style>
-
-
-
-  

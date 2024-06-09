@@ -29,18 +29,63 @@ export default {
   margin: 1em 0;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: small;
+  text-align: left;
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-style: italic;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
 }
 
 .notification-success {
-  background-color: #d4edda;
-  color: #155724;
-  border-color: #c3e6cb;
+  color: var(--verdeOscuro);
+}
+.notification-success::before {
+  content: "\e815";
+  font-family: 'Material Symbols Sharp';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  padding-right: 5px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
 .notification-error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border-color: #f5c6cb;
+  color: red;
 }
+
+.notification-error::before {
+  content: "\e160";
+  font-family: 'Material Symbols Sharp';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  padding-right: 5px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.notification-error:focus-visible {
+  outline: none;
+}
+
 </style>
   

@@ -21,7 +21,7 @@
                                 v-html="showPassword ? '<i class=\'bi bi-eye-slash\'></i>' : '<i class=\'bi bi-eye\'></i>'"></span>
                         </button>
                     </div>
-                    <div v-if="errorMensaje" class="error">{{
+                    <div v-if="errorMensaje" class="error-login">{{
                         errorMensaje }}</div>
                     <BaseButton class="mt-10" :cargando="logingCarga">Ingresar</BaseButton>
                     <p class="registrarse">
