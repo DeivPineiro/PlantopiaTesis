@@ -11,5 +11,7 @@ export default {
 }
 </script>
 <style >
-    
+    h1 {
+        text-transform: uppercase;
+    }
 </style>

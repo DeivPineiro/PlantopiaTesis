@@ -56,12 +56,19 @@
             </template>
             <template v-else>
                 <div class="text-center chart-container">
-                    <h2 class="mb-4 text-2xl font-bold text-green-800">Tus Estadisticas</h2>
-                    <LineChart :labels="labels" :data1="data1" :data2="data2" />
-                </div>
-                <div class="max-w-md mx-auto text-left mt-0 bg-slate-300 p-2 rounded-md shadow-2xl">
-                    <p>Cobertura total: {{ coberturaTotal }} km²</p>
-                    <p>Valor cosechas: {{ totalValorAreas.toFixed(2) }} USD$</p>
+                    <BaseH2>Tus Estadisticas</BaseH2>
+                    <div style="display: flex;">
+                        <div class="estadisticas">
+                            <p>Cobertura total</p>
+                            <p>{{ coberturaTotal }} km²</p>
+                        </div>
+                        <div class="estadisticas">
+                            <p>Valor cosechas</p>
+                            <p>{{ totalValorAreas.toFixed(2) }} USD$</p>
+                        </div>
+                    </div>
+                    <LineChart :labels="lineChart.labels" :data="lineChart.data" />
+                    <PieChart :labels="pieChart.labels" :data="pieChart.data" :backgroundColors="pieChart.colors" />
                 </div>
             </template>
 
@@ -72,15 +79,15 @@
 
 <script>
 import BaseH1 from '../components/BaseH1.vue';
+import BaseH2 from '../components/BaseH2.vue';
 import { subscribeToAuth, logOut } from '../service/auth.js';
 import { findUserAreas } from "./../service/area.js";
 import LineChart from '../components/LineChart.vue';
-import { ref } from 'vue';
+import PieChart from '../components/PieChart.vue';
 
-import * as d3 from 'd3';
 export default {
     name: 'home',
-    components: { BaseH1, LineChart },
+    components: { BaseH1, BaseH2, LineChart, PieChart },
 
     data() {
         return {
@@ -94,28 +101,33 @@ export default {
             areas: null,
             areasUnsuscribe: () => { },
             coberturaTotal: null,
-            totalValorAreas: 0
+            totalValorAreas: 0,
+            lineChart: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                data: {
+                    nombre: 'Mes de Cosecha / USD',
+                    valores: new Array(12).fill(null)
+                },
+            },
+            pieChart: {
+                labels: null,
+                data: null,
+                colors: null,
+            },
+            colorsPieChart: [
+                'rgb(255, 99, 132)',   // red
+                'rgb(255, 159, 64)',   // orange
+                'rgb(255, 205, 86)',   // yellow
+                'rgb(75, 192, 192)',   // green
+                'rgb(54, 162, 235)',   // blue
+                'rgb(153, 102, 255)',  // purple
+                'rgb(201, 203, 207)'   // grey
+            ],
         }
-    },
-    setup() {
-        const labels = ref(['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']);
-        const data1 = ref({
-            nombre: 'Plantacion',
-            valores: [65, 59, 200, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55]
-        });
-        const data2 = ref({
-            nombre: 'Cosecha',
-            valores: [null, 48, 40, 19, 86, 27, 90, 28, 48, 40, 19, 86, 27]
-        });
-
-        return { labels, data1, data2 };
     },
     methods: {
         getEmailPrefix(email) {
             return email && email.includes('@') ? email.split('@')[0] : email;
-        },
-        toggleMenu() {
-            this.showUser = !this.showUser;
         },
         logOuting() {
             logOut();
@@ -124,72 +136,69 @@ export default {
         navigateTo(route) {
             this.$router.push(route);
         },
-        generarGrafico() {
-            const areasPorFecha = this.obtenerAreasPorFecha();
-            const data = Object.entries(areasPorFecha).map(([fecha, count]) => ({ fecha, count }));
-
-            const containerWidth = this.$refs.chartContainer.clientWidth;
-            const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-            const width = containerWidth - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select(this.$refs.svgChart)
-                .attr("width", containerWidth)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleBand()
-                .domain(data.map(d => d.fecha))
-                .range([0, width])
-                .padding(0.1);
-
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(data, d => d.count)])
-                .nice()
-                .range([height, 0]);
-
-            svg.append("g")
-                .attr("class", "x-axis")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x));
-
-            svg.append("g")
-                .attr("class", "y-axis")
-                .call(d3.axisLeft(y));
-
-            svg.selectAll(".bar")
-                .data(data)
-                .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", d => x(d.fecha))
-                .attr("y", d => y(d.count))
-                .attr("width", x.bandwidth())
-                .attr("height", d => height - y(d.count))
-                .attr("fill", "#006633");
-
-            this.coberturaTotal = this.calcularCoberturaTotal();
-            this.totalValorAreas = this.calcularValorTotalAreas();
-            svg.style("margin", "0 auto");
-        },
-        obtenerAreasPorFecha() {
-            const areasPorFecha = {};
-
+        obtenerAreasPorMes() {
+            const areasPorMes = Array.from({ length: 12 }, () => []);
             if (this.areas && this.areas.length > 0) {
                 this.areas.forEach(area => {
-                    if (area.creado && area.creado.seconds) {
-                        const fechaCreacion = new Date(area.creado.seconds * 1000);
-                        const fechaKey = fechaCreacion.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
-                        if (!areasPorFecha[fechaKey]) {
-                            areasPorFecha[fechaKey] = 0;
-                        }
-                        areasPorFecha[fechaKey]++;
+                    let fecha;
+                    fecha = new Date(area.diaCosecha);
+                    if (fecha) {
+                        const mes = fecha.getMonth();
+                        areasPorMes[mes].push(area);
                     }
                 });
             }
-            console.log(this.areas);
-            return areasPorFecha;
+            return areasPorMes;
         },
+        obtenerValoresCosechaUsd() {
+            const areasPorMes = this.obtenerAreasPorMes();
+            const valoresPorMes = areasPorMes.map(mesAreas => {
+                // Sumar el valor calculado para cada área en el mes
+                const sumaValores = mesAreas.reduce((total, area) => {
+                    const valorArea = (((area.areaKilometros * area.pesoPorCosecha) / 1000) * area.valorPorTonelada);
+                    return total + valorArea;
+                }, 0);
+                // Redondear la suma a dos decimales
+                return sumaValores.toFixed(0);
+            });
+            return valoresPorMes;
+        },
+        obtenerAreasByNombre() {
+            let areasAgrupadas = {};
+            let colorIndex = 0;
+
+            // Recorrer todas las áreas
+            this.areas.forEach(area => {
+                // Verificar si ya existe una entrada para el nombre de cosecha actual
+                if (areasAgrupadas.hasOwnProperty(area.nombreCosecha)) {
+                    // Sumar el área actual al área acumulada
+                    areasAgrupadas[area.nombreCosecha].areaKilometros += area.areaKilometros;
+                } else {
+                    // Si no existe, crear una nueva entrada para el nombre de cosecha
+                    areasAgrupadas[area.nombreCosecha] = {
+                        nombre: area.nombreCosecha,
+                        areaKilometros: area.areaKilometros,
+                        color: this.obtenerColor(colorIndex)  // Función para obtener un color aleatorio
+                    };
+                    colorIndex++;
+                }
+            });
+
+            // Extraer los resultados en arreglos separados
+            let nombres = Object.keys(areasAgrupadas);
+            let areas = nombres.map(nombre => areasAgrupadas[nombre].areaKilometros);
+            let colores = nombres.map(nombre => areasAgrupadas[nombre].color);
+
+            this.pieChart.labels = nombres;
+            this.pieChart.data = areas;
+            this.pieChart.colors = colores;
+        },
+
+        obtenerColor(i) {
+            const color = this.colorsPieChart[i % this.colorsPieChart.length];
+            return color;
+        },
+
         calcularCoberturaTotal() {
             if (this.areas && this.areas.length > 0) {
                 return this.areas.reduce((total, area) => total + area.areaKilometros, 0).toFixed(3);
@@ -199,8 +208,6 @@ export default {
         },
         calcularValorTotalAreas() {
             if (this.areas && this.areas.length > 0) {
-                console.log(this.areas);
-                console.log(this.areas.reduce((total, area) => total + (((area.areaKilometros * area.pesoPorCosecha) / 1000) * area.valorPorTonelada), 0));
                 return this.areas.reduce((total, area) => total + (((area.areaKilometros * area.pesoPorCosecha) / 1000) * area.valorPorTonelada), 0);
             } else {
                 return 0;
@@ -214,59 +221,17 @@ export default {
         });
         this.areasUnsuscribe = findUserAreas(this.user.id, (areas) => {
             this.areas = areas;
-            this.generarGrafico();
+            this.coberturaTotal = this.calcularCoberturaTotal();
+            this.totalValorAreas = this.calcularValorTotalAreas();
+            this.lineChart.data.valores = this.obtenerValoresCosechaUsd();
+            this.pieChart.valores = this.obtenerAreasByNombre();
         });
     },
 }
 </script>
 
 <style scoped>
-.navbar {
-    background-color: #e2e8f0;
-    color: #333333;
-    padding: 10px;
-}
-
-.navbar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.navbar ul li {
-    display: inline;
-    margin-right: 20px;
-    cursor: pointer;
-}
-
-.chart-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.statistics {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
+h2 {
+    font-size: 20px;
 }
 </style>
-
-<style>
-.material-symbols-outlined {
-    font-variation-settings:
-        'FILL' 0,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 24
-}
-</style>
-<!-- 
-    *Mover nav al App
-    *Cambiar estilo a tus cultivos
-    *
-
-
-
-
-
--->

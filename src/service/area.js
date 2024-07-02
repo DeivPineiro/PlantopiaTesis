@@ -4,7 +4,6 @@ import { getDocs, where, limit, addDoc, collection, onSnapshot, serverTimestamp,
 const userRef = collection(db, 'usuarios');
 
 export async function CreateArea(uid, data) {
-    console.log("Id: ", uid, "//   Data: ", data);
     const thisUserRef = doc(userRef, uid);
     const areaRef = collection(thisUserRef, 'areas');
     return addDoc(areaRef, { ...data, creado: serverTimestamp() });
@@ -29,12 +28,13 @@ export async function addNewDataArea(idUser, idArea, data) {
     const areaDocRef = doc(userDocRef, 'areas', idArea);
     const areaSnapshot = await getDoc(areaDocRef);
     if (areaSnapshot.exists()) {
-        console.log(data);
         return await updateDoc(areaDocRef, {
             nombreCosecha: data.nombreCosecha,
             pesoPorCosecha: data.pesoPorCosecha,
             valorPorTonelada: data.valorPorTonelada,
             colorArea: data.colorArea,
+            diaPlantacion: data.diaPlantacion,
+            diaCosecha: data.diaCosecha
         });
         return null;
     }
@@ -72,7 +72,8 @@ export function findUserAreas(userId, callback) {
                 areaKilometros: doc.data().areaKilometros,
                 creado: doc.data().creado,
                 colorArea: doc.data().colorArea,
-
+                diaPlantacion: doc.data().diaPlantacion,
+                diaCosecha: doc.data().diaCosecha
             };
         });
         callback(data);
@@ -94,6 +95,8 @@ export function findAreaById(userId, areaId, callback) {
                 areaKilometros: areaData.areaKilometros,
                 creado: areaData.creado,
                 colorArea: areaData.colorArea,
+                diaPlantacion: areaData.diaPlantacion,
+                diaCosecha: areaData.diaCosecha
             });
         } else {
             callback(null);

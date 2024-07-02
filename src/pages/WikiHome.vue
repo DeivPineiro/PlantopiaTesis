@@ -1,53 +1,60 @@
 <template>
-    <div class="h-screen">
-        <BaseH1 class="text-center mb-0 text-3xl pt-2 hidden">PlatoWiki</BaseH1>
-        <router-link to="/home" class="absolute top-2 left-2 scale-75">
-            <button class="p-0 m-0 flex items-center justify-center">
-                <img class="scale-75 p-0" src="/imgs/back2.png" alt="back">
-            </button>
-        </router-link>
-        <div class="pt-20 flex items-center justify-center ">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-24">
-                <div>
-                    <p class="text-center pb-1">Plantas</p>
-                    <div class="bg-gray-200 p-4 flex items-center justify-center rounded-full w-32 h-23 shadow-2xl">
-                        <router-link to="/wiki_home/wiki_plants">
-                            <img src="/imgs/wikiplant.png" alt="Wiki sobre plantas" class="mx-auto scale-75" />
-                        </router-link>
-                    </div>
+    <section class="h-screen">
+        <div class="header-map">
+            <router-link to="/home" class="back-map">
+                <button class="btn-amarillo">
+                    <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
+                </button>
+            </router-link>
+            <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
+        </div>
+        <div class="container px-4 mx-auto div-form fondo-blanco">
+            <div class="header-form">
+                <BaseH1 class="text-center">PlatoWiki</BaseH1>
+            </div>
+            <div class="container-wiki">
+                <div class="box-wiki">
+                    <router-link to="/wiki_home/wiki_plants" class="nav-wiki">
+                        <img src="/imgs/wikiplant.png" alt="Wiki sobre plantas" class="mx-auto scale-75" />
+                    </router-link>
+                    <p class="slogan-form py-2">Plantas</p>
                 </div>
-                <div>
-                    <p class="text-center pb-1">Plagas</p>
-                    <div class="bg-gray-200 p-6 flex items-center justify-center rounded-full w-32 h-23 shadow-2xl">
-                        <router-link to="/wiki_home/wiki_plagues">
-                            <img src="/imgs/plagues.png" alt="Wiki sobre plagas" class="mx-auto" />
-                        </router-link>
-                    </div>
+                <div class="box-wiki">
+                    <router-link to="/wiki_home/wiki_plagues" class="nav-wiki">
+                        <img src="/imgs/plagues.png" alt="Wiki sobre plagas" class="mx-auto scale-75" />
+                    </router-link>
+                    <p class="slogan-form py-2">Plagas</p>
                 </div>
+            </div>
+            <div class="info-wiki">
+                <BaseH2>¡Bienvenido a nuestra Plantowiki!</BaseH2>
+                <p>Aquí podrás encontrar toda la información que necesites sobre una amplia variedad de plantas y las
+                    plagas que pueden afectarlas. Nuestra base de datos está llena de detalles esenciales para ayudarte
+                    a cuidar y mantener tus cultivos en óptimas condiciones.</p>
+                <BaseH2>¿Qué puedes encontrar en Plantowiki?</BaseH2>
+                <p><strong class="slogan-form">Wiki de Plantas:</strong> Información sobre nombres científicos, épocas
+                    de crecimiento, rendimientos
+                    aproximados, tipos de luz y suelo, y mucho más.</p>
+                <p><strong class="slogan-form"> Wiki de Plagas:</strong> Datos sobre las plagas más comunes, sus nombres
+                    científicos y métodos eficaces para
+                    su control y prevención.</p>
+                <BaseH2>Contactanos</BaseH2>
+                <p>Si no encuentras un cultivo específico, tienes dudas sobre cómo utilizar Plantowiki, o posees
+                    información valiosa que podría beneficiar a nuestra comunidad, envíanos un correo electrónico a
+                    plantopia@gmail.com</p>
+
             </div>
         </div>
-        <footer class="fixed bottom-0 left-0 w-full bg-slate-200 border-t border-gray-200 shadow items-center">
-            <div class="hidden sm:block ">
-                <img class="bottom-0 scale-50 m-auto " src="/imgs/mockhorizontal.png" alt="user icon">
-                <p class="pb-2 text-xs md:text-sm text-gray-600 text-center pr-2 font-bold"> © PLANTOPIA 2023. Todos los
-                    derechos reservados.
-                </p>
-            </div>
-            <div class="sm:hidden md:hidden lg:hidden xl:hidden">
-                <img class="absolute bottom-0 scale-50 mx-auto left-0 right-0" src="/imgs/logo.png" alt="user icon">
-                <p class="pb-2 text-xs md:text-sm text-gray-600 text-right pr-2 font-bold"> © PLANTOPIA 2023<br> Todos los
-                    derechos reservados.
-                </p>
-            </div>
-        </footer>
-    </div>
+    </section>
 </template>
 <script>
 import BaseH1 from '../components/BaseH1.vue';
+import BaseH2 from '../components/BaseH2.vue';
+
 import { subscribeToAuth, logOut } from '../service/auth.js';
 export default {
     name: 'wikiHome',
-    components: { BaseH1 },
+    components: { BaseH1, BaseH2 },
 
     data() {
         return {
@@ -75,4 +82,4 @@ export default {
     },
 }
 </script>
-<style ></style>
+<style></style>

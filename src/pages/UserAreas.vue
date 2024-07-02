@@ -1,51 +1,60 @@
 <template>
-    <div class="max-w-lg mx-auto py-2 px-1 relative">
-        <BaseH1 class="text-center mb-0 text-3xl pb-8">TUS CULTIVOS</BaseH1>
-        <router-link to="/home" class="absolute top-10 left-0 scale-75">
-            <button class=" m-0 flex items-center justify-center bg-gray-300 px-3 rounded-md shadow-2xl">
-                <img src="/imgs/back.png" alt="back">Atras
-            </button>
-        </router-link>
-        <!-- <img class="p-0 absolute top-1 right-2" src="/imgs/mock60.png" alt="back"> -->
-
-        <div class="grid grid-cols-1 gap-1">
-            <div v-if="!areas || areas.length === 0" class="text-center font-bold text-gray-600 mt-4">
-                <p>No tienes áreas cargadas.</p>
+    <section class="h-screen">
+        <div class="header-map">
+            <router-link to="/home" class="back-map">
+                <button class="btn-amarillo">
+                    <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
+                </button>
+            </router-link>
+            <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
+        </div>
+        <div class="container px-4 mx-auto div-form fondo-blanco">
+            <div class="header-form">
+                <BaseH1 class="text-center">TUS CULTIVO</BaseH1>
             </div>
-            <div v-else>
-                <div class="bg-white py-4 px-2 rounded shadow-md mb-4 flex items-start justify-between" v-for="area in areas"
-                    :key="area.id">
-                    <div class="w-3/4">
-                        <p class="font-bold">Nombre: <span class="font-normal">{{ area.nombreCosecha }}</span></p>
-                        <p class="font-bold">Peso: <span class="font-normal">{{ area.pesoPorCosecha }} kg/km²</span></p>
-                        <p class="font-bold">Precio t/km²: <span class="font-normal">{{ area.valorPorTonelada }} USD$ x
-                                t/km²</span></p>
-                        <p class="font-bold">Área: <span class="font-normal">{{ area.areaKilometros.toFixed(3) }} km²</span>
-                        </p>
-                        <div class="flex items-center">
-                            <p class="font-bold mr-2">Color área:</p>
-                            <div class="w-6 h-6 mr-2"
-                                :style="{ backgroundColor: area.colorArea, border: '1px solid #000' }"></div>
-                            <p class="font-normal">{{ traducirColor(area.colorArea) }}</p>
+            <div class="grid grid-cols-1 gap-1">
+                <div v-if="!areas || areas.length === 0" class="text-center font-bold text-gray-600 mt-4">
+                    <p>No tienes áreas cargadas.</p>
+                </div>
+                <div v-else>
+                    <div class="box-cultivos"
+                        v-for="area in areas" :key="area.id">
+                        <div class="">
+                            <p class="font-bold">Nombre: <span class="font-normal">{{ area.nombreCosecha }}</span></p>
+                            <p class="font-bold">Peso: <span class="font-normal">{{ area.pesoPorCosecha }} kg/km²</span></p>
+                            <p class="font-bold">USD$ x T/km²: <span class="font-normal">${{ area.valorPorTonelada }}</span></p>
+                            <p class="font-bold">Área: <span class="font-normal">{{ area.areaKilometros.toFixed(3) }} km²</span></p>
+                            <p class="font-bold">Plantacion: <span class="font-normal">{{ formatFecha(area.diaPlantacion) }}</span></p>
+                            <p class="font-bold">Cosecha: <span class="font-normal">{{ formatFecha(area.diaCosecha) }}</span></p>
+                            <div class="flex items-center">
+                                <p class="font-bold mr-2">Color:</p>
+                                <div class="w-6 h-6 mr-2"
+                                    :style="{ backgroundColor: area.colorArea, border: '1px solid #000' }"></div>
+                                <p class="font-normal">{{ traducirColor(area.colorArea) }}</p>
+                            </div>
+                            <p class="font-bold text-green-700 mt-2">Valor total: <span
+                                    class="font-normal text-black">USD${{
+                                        (((area.areaKilometros * area.pesoPorCosecha) / 1000) *
+                                            area.valorPorTonelada).toFixed(2) }}
+                                    </span></p>
                         </div>
-                        <p class="font-bold text-green-700 mt-2">Valor total: <span class="font-normal text-black">{{
-                            (((area.areaKilometros * area.pesoPorCosecha) / 1000) * area.valorPorTonelada).toFixed(2) }}
-                                USD$</span></p>
-                    </div>
-                    <div class="w-1/4 flex flex-col justify-between items-end">
-                        <div class="dropdown">
-                            <button class="dropbtn rounded-full p-1"><img src="../../public/imgs/more16.png" alt=""></button>
-                            <div class="dropdown-content">
-                                <a @click="goToHarvest(area.id, area.areaKilometros)">Editar</a>
-                                <a @click="goToMap(area.poligons, area.id, area.colorArea)">Ver</a>
-                                <a @click="delArea(this.user.id, area.id)">Eliminar</a>
+                        <div class="flex flex-col justify-between items-end">
+                            <div class="dropdown">
+                                <button class="dropbtn rounded-full p-1"><span
+                                        class="material-symbols-sharp">menu</span></button>
+                                <div class="dropdown-content">
+                                    <a @click="goToHarvest(area.id, area.areaKilometros)">Editar</a>
+                                    <a @click="goToMap(area.poligons, area.id, area.colorArea)">Ver</a>
+                                    <a @click="delArea(this.user.id, area.id)">Eliminar</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
 </template>
 
 <script>
@@ -77,7 +86,14 @@ export default {
         });
     },
     methods: {
-
+        formatFecha(fecha) {
+            if (!fecha) return '';
+            const date = new Date(fecha);
+            const dia = String(date.getDate()).padStart(2, '0');
+            const mes = String(date.getMonth() + 1).padStart(2, '0');
+            const año = date.getFullYear();
+            return `${dia}/${mes}/${año}`;
+        },
         goToMap(poligons, id, colorArea) {
             this.$router.push({
                 path: '/user/areas/irAMapa',
@@ -102,7 +118,6 @@ export default {
         delArea(idUser, idArea) {
             const confirmDelete = window.confirm('¿Estás seguro de eliminar esta área?');
             if (confirmDelete) {
-                console.log("idUser: ", idUser, "idArea: ", idArea)
                 deleteArea(idUser, idArea);
                 this.$router.push({ path: '/user/areas' });
             }
@@ -184,6 +199,6 @@ export default {
 }
 
 .dropdown:hover .dropbtn {
-    background-color: #ffef2e;
+    color: #939393;
 }
 </style>

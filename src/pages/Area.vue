@@ -1,5 +1,5 @@
 <template>
-    <section class=" h-screen">
+    <section class="h-screen">
         <div class="header-map">
             <router-link to="/home" class="back-map">
                 <button class="btn-amarillo">
@@ -34,11 +34,11 @@
                     </div>
                     <div class="mb-6">
                         <BaseLabel for="diaPlantacion">Dia de plantacion</BaseLabel>
-                        <BaseInput type="date" id="diaPlantacion" v-model="valorPorTonelada" />
+                        <BaseInput type="date" id="diaPlantacion" v-model="diaPlantacion" />
                     </div>
                     <div class="mb-6">
                         <BaseLabel for="diaCosecha">Dia de cosecha estimada</BaseLabel>
-                        <BaseInput type="date" id="diaCosecha" v-model="valorPorTonelada" />
+                        <BaseInput type="date" id="diaCosecha" v-model="diaCosecha" />
                     </div>
                     <div class="mb-6">
                         <BaseLabel for="colorArea">Color del área</BaseLabel>
@@ -94,6 +94,8 @@ export default {
             pesoPorCosecha: null,
             valorPorTonelada: null,
             colorArea: 'yellow',
+            diaPlantacion: null,
+            diaCosecha: null,
             showNotification: false,
             notificationType: '',
             notificationMessage: '',
@@ -110,6 +112,8 @@ export default {
                 pesoPorCosecha: parseFloat(this.pesoPorCosecha),
                 valorPorTonelada: parseFloat(this.valorPorTonelada),
                 colorArea: this.colorArea,
+                diaPlantacion: this.diaPlantacion,
+                diaCosecha: this.diaCosecha
             };
             await addNewDataArea(this.user.id, this.lastArea.id, data);
             router.push('/user/areas');
@@ -152,4 +156,3 @@ export default {
     },
 }
 </script>
-<style></style>

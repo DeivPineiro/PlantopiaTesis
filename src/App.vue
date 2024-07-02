@@ -11,7 +11,7 @@
         loop autoplay></dotlottie-player>
     </div>
     <div v-if="!showWelcomeImage" class="h-full fondo-app"
-     >
+      style="">
       <router-view></router-view>
     </div>
   </div>

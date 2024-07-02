@@ -107,7 +107,6 @@ export default {
                     });
                 });
             } else {
-                console.log('La geolocalización no es compatible con tu navegador.');
             }
         },
         updateArea() {
@@ -116,14 +115,12 @@ export default {
             const areaKilometros = area / 1000000;
             this.polygonCoords = polygon;
             this.areaKilometros = areaKilometros;
-            console.log(`Datos del Polígono: ${JSON.stringify(this.polygonCoords)}`);
-            console.log(`Datos del Área Km: ${JSON.stringify(this.areaKilometros)}`);
         },
         async handleSubmit() {
             try {
                 this.formCarga = true;
                 this.unsuscribe = subscribeToAuth(newUser => this.user = { ...newUser });
-                await CreateArea(this.user.id, { poligons: JSON.stringify(this.polygonCoords), areaKilometros: this.areaKilometros, fechaCultivo: 1, fechaCoseche: 2, idUser: this.user.id });
+                await CreateArea(this.user.id, { poligons: JSON.stringify(this.polygonCoords), areaKilometros: this.areaKilometros, idUser: this.user.id });
                 this.$router.push('/area');
             } catch (error) {
                 console.log(error);

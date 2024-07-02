@@ -1,6 +1,6 @@
 <template >
 
-    <h2 class="font-bold text-lg mb-5 text-yellow-300"><slot /></h2>
+    <h2><slot /></h2>
 
 </template>
 <script>
@@ -11,5 +11,10 @@ export default {
 }
 </script>
 <style >
-    
+    h2 {
+        color: var(--verdeOscuro);
+        font-weight: bold;
+        text-align: center;
+        font-size: 16px;
+    }
 </style>

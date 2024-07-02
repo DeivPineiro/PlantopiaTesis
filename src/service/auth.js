@@ -20,7 +20,6 @@ onAuthStateChanged(auth, async user => {
         setUserData({ id: user.uid, email: user.email});
         localStorage.setItem('user', JSON.stringify(userData));
         const userInfo = await getUserById(user.uid);
-        console.log(userInfo);
         setUserData({rol: userInfo.rol});
     } else {
         clearUserData();
@@ -46,7 +45,6 @@ export async function registrar({ email, password, rol }) {
 }
 
 export function login({ email, password }) {
-    console.log(email, password);
     return signInWithEmailAndPassword(auth, email, password)
       .then(credencialesUsuario => {
         return { ...userData };

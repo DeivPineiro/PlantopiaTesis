@@ -1,18 +1,19 @@
 <template>
     <BaseH1 class="hidden">Mostrar todas las áreas</BaseH1>
-    <div style="max-height: 100vh; overflow-y: auto;">
-        <div id="mapContainer" class="h-screen relative">
-            <div id="map" class="w-full h-full"></div>
-            <router-link to="/home" class="absolute top-14 left-0 scale-75">
-                <button class=" m-0 flex items-center justify-center bg-gray-300 px-3 rounded-md shadow-2xl">
-                    <img src="/imgs/back.png" alt="back">Atras
+    <div class="h-screen">
+        <div class="header-map">
+            <router-link to="/home" class="back-map">
+                <button class="btn-amarillo">
+                    <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
                 </button>
             </router-link>
-            <div id="areaKilometros"
-                class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 rounded-xl p-2 z-10 text-sm opacity-90">
+            <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
+            <div id="areaKilometros" class="info-map">
+                <p>{{ areaText }}</p>
             </div>
-            <div id="buttonContainer" class="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-10">
-            </div>
+        </div>
+        <div id="mapContainer" class="vista-map">
+            <div id="map" class="w-full h-full"></div>
         </div>
     </div>
 </template>
@@ -88,10 +89,3 @@ export default {
     }
 }
 </script>
-
-<style >
-.static-map {
-    width: 100%;
-    height: auto;
-}
-</style>

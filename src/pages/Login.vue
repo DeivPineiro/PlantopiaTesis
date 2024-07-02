@@ -12,11 +12,11 @@
                         <BaseLabel class="login" for="email">E-mail</BaseLabel>
                         <BaseInput class="login" type="email" id="email" v-model="form.email" :disabled="logingCarga" />
                     </div>
-                    <div class="mb-2" style="padding-top: 1rem">
-                        <BaseLabel class="login" for="password">Contraseña</BaseLabel>
+                    <div class="mb-2" style="padding-top: 1rem; display: flex; flex-direction: column; align-items: flex-end;">
+                        <BaseLabel class="login" style="width: 100%;" for="password">Contraseña</BaseLabel>
                         <BaseInput class="login" :type="showPassword ? 'text' : 'password'" type="password"
                             id="password" v-model="form.password" :disabled="logingCarga" />
-                        <button class="toggle-password" @click="togglePasswordVisibility" style="position: absolute; color: white; left: 270px;">
+                        <button class="toggle-password btn-eye" @click="togglePasswordVisibility">
                             <span
                                 v-html="showPassword ? '<i class=\'bi bi-eye-slash\'></i>' : '<i class=\'bi bi-eye\'></i>'"></span>
                         </button>
@@ -68,7 +68,6 @@ export default {
                 ...this.form
             })
                 .then(response => {
-                    console.log(response);
                     if (response.code) {
                         switch (response.code) {
                             case 'auth/invalid-email':
