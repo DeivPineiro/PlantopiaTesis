@@ -1,5 +1,5 @@
 import { db } from './firebase.js'
-import { getDocs, where, limit, addDoc, collection, onSnapshot, serverTimestamp, query, orderBy, getDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { getDocs, limit, addDoc, collection, onSnapshot, serverTimestamp, query, orderBy, getDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 const userRef = collection(db, 'usuarios');
 

@@ -10,12 +10,12 @@
         </div>
         <div class="container px-4 mx-auto div-form fondo-blanco">
             <div class="header-form">
-                <BaseH1 class="text-center">Edita tu cosecha</BaseH1>
+                <BaseH1 class="text-center">Editá tu cosecha</BaseH1>
             </div>
             <form action="#" @submit.prevent="CrearArea">
                 <div class="max-w-lg mx-auto py-4">
                     <div class="mb-6">
-                        <BaseLabel for="nombreCosecha">Identifica a tu cultivo</BaseLabel>
+                        <BaseLabel for="nombreCosecha">Identificá a tu cultivo</BaseLabel>
                         <BaseInput type="text" id="nombreCosecha" v-model="nombreCosecha" />
                     </div>
                     <div class="mb-6">
@@ -27,11 +27,11 @@
                         <BaseInput type="number" id="valorPorTonelada" v-model="valorPorTonelada" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="diaPlantacion">Dia de plantacion</BaseLabel>
+                        <BaseLabel for="diaPlantacion">Día de plantación</BaseLabel>
                         <BaseInput type="date" id="diaPlantacion" v-model="diaPlantacion" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="diaCosecha">Dia de cosecha estimada</BaseLabel>
+                        <BaseLabel for="diaCosecha">Día de cosecha estimada</BaseLabel>
                         <BaseInput type="date" id="diaCosecha" v-model="diaCosecha" />
                     </div>
                     <div class="mb-6">
@@ -64,14 +64,16 @@
 </template>
 
 <script>
-import BaseButton from '../components/BaseButton.vue';
 import BaseH1 from '../components/BaseH1.vue';
-import BaseInput from '../components/BaseInput.vue';
 import BaseLabel from '../components/BaseLabel.vue';
+import BaseInput from '../components/BaseInput.vue';
+import BaseButton from '../components/BaseButton.vue';
+import Notificacion from '../components/Notificacion.vue';
+
 import { subscribeToAuth } from "./../service/auth.js";
 import { findAreaById, addNewDataArea } from "./../service/area.js";
+
 import router from '../router/router.js';
-import Notificacion from '../components/Notificacion.vue';
 
 export default {
     name: 'areas',
@@ -95,7 +97,6 @@ export default {
             notificationMessage: '',
         }
     },
-
     mounted() {
         const areaId = this.$route.query.idArea;
         const akm = this.$route.query.areaKilometros;
@@ -109,7 +110,7 @@ export default {
                 this.valorPorTonelada = area.valorPorTonelada;
                 this.colorArea = area.colorArea;
                 this.diaPlantacion = area.diaPlantacion,
-                this.diaCosecha = area.diaCosecha
+                    this.diaCosecha = area.diaCosecha
             }
         });
     },
@@ -123,12 +124,9 @@ export default {
                 diaPlantacion: this.diaPlantacion,
                 diaCosecha: this.diaCosecha
             };
-
             await addNewDataArea(this.user.id, this.idArea, data);
             router.push('/user/areas');
-
         },
-
         preCalcular() {
             const area = parseFloat(this.areaKilometros);
             const peso = parseFloat(this.pesoPorCosecha);
@@ -145,7 +143,6 @@ export default {
             this.showNotification = true;
             this.notificationType = type;
             this.notificationMessage = message;
-
             setTimeout(() => {
                 this.hideNotification();
             }, 5000);
@@ -156,8 +153,5 @@ export default {
             this.notificationMessage = '';
         },
     },
-
 }
 </script>
-
-<style></style>

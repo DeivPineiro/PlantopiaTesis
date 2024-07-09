@@ -17,15 +17,19 @@
                     <p>No tienes áreas cargadas.</p>
                 </div>
                 <div v-else>
-                    <div class="box-cultivos"
-                        v-for="area in areas" :key="area.id">
+                    <div class="box-cultivos" v-for="area in areas" :key="area.id">
                         <div class="">
                             <p class="font-bold">Nombre: <span class="font-normal">{{ area.nombreCosecha }}</span></p>
-                            <p class="font-bold">Peso: <span class="font-normal">{{ area.pesoPorCosecha }} kg/km²</span></p>
-                            <p class="font-bold">USD$ x T/km²: <span class="font-normal">${{ area.valorPorTonelada }}</span></p>
-                            <p class="font-bold">Área: <span class="font-normal">{{ area.areaKilometros.toFixed(3) }} km²</span></p>
-                            <p class="font-bold">Plantacion: <span class="font-normal">{{ formatFecha(area.diaPlantacion) }}</span></p>
-                            <p class="font-bold">Cosecha: <span class="font-normal">{{ formatFecha(area.diaCosecha) }}</span></p>
+                            <p class="font-bold">Peso: <span class="font-normal">{{ area.pesoPorCosecha }} kg/km²</span>
+                            </p>
+                            <p class="font-bold">USD$ x T/km²: <span class="font-normal">${{ area.valorPorTonelada
+                                    }}</span></p>
+                            <p class="font-bold">Área: <span class="font-normal">{{ area.areaKilometros.toFixed(3) }}
+                                    km²</span></p>
+                            <p class="font-bold">Plantación: <span class="font-normal">{{
+                                    formatFecha(area.diaPlantacion) }}</span></p>
+                            <p class="font-bold">Cosecha: <span class="font-normal">{{ formatFecha(area.diaCosecha)
+                                    }}</span></p>
                             <div class="flex items-center">
                                 <p class="font-bold mr-2">Color:</p>
                                 <div class="w-6 h-6 mr-2"
@@ -33,10 +37,10 @@
                                 <p class="font-normal">{{ traducirColor(area.colorArea) }}</p>
                             </div>
                             <p class="font-bold text-green-700 mt-2">Valor total: <span
-                                    class="font-normal text-black">USD${{
+                                    class="font-normal text-black">USD ${{
                                         (((area.areaKilometros * area.pesoPorCosecha) / 1000) *
                                             area.valorPorTonelada).toFixed(2) }}
-                                    </span></p>
+                                </span></p>
                         </div>
                         <div class="flex flex-col justify-between items-end">
                             <div class="dropdown">
@@ -58,12 +62,15 @@
 </template>
 
 <script>
-import BaseButton from '../components/BaseButton.vue';
 import BaseH1 from '../components/BaseH1.vue';
-import BaseInput from '../components/BaseInput.vue';
 import BaseLabel from '../components/BaseLabel.vue';
+import BaseInput from '../components/BaseInput.vue';
+import BaseButton from '../components/BaseButton.vue';
+
 import { subscribeToAuth } from "./../service/auth.js";
 import { findUserAreas, deleteArea } from "./../service/area.js";
+import { formatFecha } from "../helpers/fecha.js";
+
 export default {
     name: 'userAreas',
     components: { BaseButton, BaseLabel, BaseInput, BaseH1 },
@@ -86,14 +93,7 @@ export default {
         });
     },
     methods: {
-        formatFecha(fecha) {
-            if (!fecha) return '';
-            const date = new Date(fecha);
-            const dia = String(date.getDate()).padStart(2, '0');
-            const mes = String(date.getMonth() + 1).padStart(2, '0');
-            const año = date.getFullYear();
-            return `${dia}/${mes}/${año}`;
-        },
+        formatFecha,
         goToMap(poligons, id, colorArea) {
             this.$router.push({
                 path: '/user/areas/irAMapa',

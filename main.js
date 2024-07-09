@@ -9,7 +9,3 @@ app.config.globalProperties.$Geolocation = Geolocation;
 app.use(router);
 
 app.mount('#app');
-
-
-
-

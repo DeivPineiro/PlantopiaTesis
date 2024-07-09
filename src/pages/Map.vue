@@ -21,16 +21,16 @@
     </div>
 </template>
 <script>
+import BaseH1 from "../components/BaseH1.vue";
+import BaseButton from '../components/BaseButton.vue';
+
 import { CreateArea } from "../service/area.js";
 import { subscribeToAuth } from "./../service/auth.js";
 import googleMapsLoader from "../service/google-maps-config.js";
-import BaseH1 from "../components/BaseH1.vue";
-import BaseButton from '../components/BaseButton.vue';
 
 export default {
     name: 'mapa',
     components: { BaseH1, BaseButton },
-
     data() {
         return {
             user: {

@@ -1,26 +1,26 @@
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth} from './firebase.js';
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { auth, db } from './firebase.js';
 import { CrearPerfilUsuario, getUserById } from './usuarios.js';
- 
+
 let userData = {
     id: null,
     email: null,
-    rol: null    
+    rol: null
 }
 
 let observers = [];
 
 if (localStorage.getItem('user')) {
-    userData = JSON.parse(localStorage.getItem('user'))   
+    userData = JSON.parse(localStorage.getItem('user'))
 }
 
 onAuthStateChanged(auth, async user => {
-    if (user) {                   
-        
-        setUserData({ id: user.uid, email: user.email});
+    if (user) {
+        setUserData({ id: user.uid, email: user.email });
         localStorage.setItem('user', JSON.stringify(userData));
         const userInfo = await getUserById(user.uid);
-        setUserData({rol: userInfo.rol});
+        setUserData({ rol: userInfo.rol });
     } else {
         clearUserData();
         localStorage.removeItem('user');
@@ -30,12 +30,12 @@ onAuthStateChanged(auth, async user => {
 export async function registrar({ email, password, rol }) {
     try {
         const credencialesUsuario = await createUserWithEmailAndPassword(auth, email, password);
-        CrearPerfilUsuario(credencialesUsuario.user.uid, {email, rol});
-    return {
-        id: credencialesUsuario.user.uid,
-        email: credencialesUsuario.user.email,
-        rol: 'Usuario',       
-    }
+        CrearPerfilUsuario(credencialesUsuario.user.uid, { email, rol });
+        return {
+            id: credencialesUsuario.user.uid,
+            email: credencialesUsuario.user.email,
+            rol: 'Usuario',
+        }
     } catch (error) {
         return {
             code: error.code,
@@ -44,25 +44,34 @@ export async function registrar({ email, password, rol }) {
     }
 }
 
+export async function verificarEmailExistente(email) {
+    const q = query(collection(db, "usuarios"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        const error = new Error();
+        error.code = 'auth/email-already-in-use';
+        throw error;
+    }
+    return false;
+}
+
 export function login({ email, password }) {
     return signInWithEmailAndPassword(auth, email, password)
-      .then(credencialesUsuario => {
-        return { ...userData };
-      })
-      .catch(error => {
-        console.error('Error de inicio de sesión:', error);  
-        // Devuelve un objeto con la propiedad 'code' en caso de error
-        return {
-          code: error.code,
-          message: error.message
-        };
-      });
-  }
-  
+        .then(credencialesUsuario => {
+            return { ...userData };
+        })
+        .catch(error => {
+            return {
+                code: error.code,
+                message: error.message
+            };
+        });
+}
 
 export function logOut() {
     return signOut(auth);
 }
+
 export function subscribeToAuth(observer) {
     observers.push(observer);
     notify(observer);
@@ -80,7 +89,7 @@ function notify(observer) {
 }
 
 function setUserData(newData) {
-    userData = { ...userData, ...newData};
+    userData = { ...userData, ...newData };
     notifyAll();
 }
 
@@ -91,4 +100,3 @@ function clearUserData() {
 export function getUserData() {
     return { ...userData };
 }
-

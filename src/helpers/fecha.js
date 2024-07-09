@@ -1,23 +1,15 @@
 /**
  * 
- * Formatea fecha a un formato elegido
+ * Formatea fecha a un dd/mm/aaaa
  * 
  * @param {Date|null} date 
  */
 
-export function dateToString(date)
-{
-    if(date == null) return null;
-    // let y = date.getFullYear();
-    // let m = date.getMonth()+1;
-    // let d = date.getDay();
-
-    // let h = date.getHours();
-    // let min = date.getMinutes();
-
-    // return `${d}-${m}-${y}--${h}:${min}`;
-
-    const dateFormat = new Intl.DateTimeFormat('es-Ar', {month: '2-digit', day: '2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}).format(date);
-    return dateFormat.replace(',', ' ');
-
+export function formatFecha(fecha) {
+    if (!fecha) return '';
+    const date = new Date(fecha);
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const año = date.getFullYear();
+    return `${dia}/${mes}/${año}`;
 }

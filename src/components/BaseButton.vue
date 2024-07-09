@@ -1,15 +1,14 @@
 <template>
-
     <button class="btn-verde" type="submit" :disabled="cargando">
         <template v-if="!cargando">
             <slot />
         </template>
         <template v-else>
-            <Carga  />
+            <Carga />
         </template>
     </button>
-
 </template>
+
 <script>
 import Carga from './Carga.vue';
 
@@ -23,7 +22,4 @@ export default {
     },
     components: { Carga }
 };
-
 </script>
-
-<style></style>

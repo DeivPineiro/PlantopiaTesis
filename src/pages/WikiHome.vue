@@ -28,10 +28,10 @@
             </div>
             <div class="info-wiki">
                 <BaseH2>¡Bienvenido a nuestra Plantowiki!</BaseH2>
-                <p>Aquí podrás encontrar toda la información que necesites sobre una amplia variedad de plantas y las
+                <p>Acá podés encontrar toda la información que necesitás sobre una amplia variedad de plantas y las
                     plagas que pueden afectarlas. Nuestra base de datos está llena de detalles esenciales para ayudarte
                     a cuidar y mantener tus cultivos en óptimas condiciones.</p>
-                <BaseH2>¿Qué puedes encontrar en Plantowiki?</BaseH2>
+                <BaseH2>¿Qué podés encontrar en Plantowiki?</BaseH2>
                 <p><strong class="slogan-form">Wiki de Plantas:</strong> Información sobre nombres científicos, épocas
                     de crecimiento, rendimientos
                     aproximados, tipos de luz y suelo, y mucho más.</p>
@@ -39,10 +39,9 @@
                     científicos y métodos eficaces para
                     su control y prevención.</p>
                 <BaseH2>Contactanos</BaseH2>
-                <p>Si no encuentras un cultivo específico, tienes dudas sobre cómo utilizar Plantowiki, o posees
-                    información valiosa que podría beneficiar a nuestra comunidad, envíanos un correo electrónico a
+                <p>Si no encontrás un cultivo específico, tenés dudas sobre cómo utilizar Plantowiki, o tenés
+                    información valiosa que podría beneficiar a nuestra comunidad, envianos un correo electrónico a
                     plantopia@gmail.com</p>
-
             </div>
         </div>
     </section>
@@ -52,10 +51,10 @@ import BaseH1 from '../components/BaseH1.vue';
 import BaseH2 from '../components/BaseH2.vue';
 
 import { subscribeToAuth, logOut } from '../service/auth.js';
+
 export default {
     name: 'wikiHome',
     components: { BaseH1, BaseH2 },
-
     data() {
         return {
             showMenu: false,
@@ -82,4 +81,3 @@ export default {
     },
 }
 </script>
-<style></style>

@@ -5,22 +5,20 @@
         class="w-screen h-screen object-cover" style="position: absolute; top: 0; left: 0;" />
     </transition>
     <div v-if="showWelcomeImage" class="h-full" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-      <dotlottie-player src="https://lottie.host/d41c351a-0fe2-40a7-ac81-76e9bbb77354/MhYp2kqk45.json"
-        background="transparent" speed="1"
-        style="width: 300px; height: 300px; position: absolute; top: 75%; left: 50%; transform: translate(-50%, -50%); width: 40%;"
-        loop autoplay></dotlottie-player>
+      <Carga class="app" style=" position: absolute; top: 75%; left: 50%; transform: translateX(-50%);" />
     </div>
-    <div v-if="!showWelcomeImage" class="h-full fondo-app"
-      style="">
+    <div v-if="!showWelcomeImage" class="h-full fondo-app" style="">
       <router-view></router-view>
     </div>
   </div>
 </template>
 <script>
 import { subscribeToAuth, logOut } from './service/auth.js';
+import Carga from './components/Carga.vue';
 
 export default {
   name: "App",
+  components: { Carga },
   data() {
     return {
       showWelcomeImage: true,
@@ -52,13 +50,9 @@ export default {
 </script>
 
 <style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+.app .loader {
+  --_g: no-repeat radial-gradient(farthest-side, #000000 90%, #9f9c9c00); /* Cambia el color aquí */
+  background: var(--_g), var(--_g), var(--_g), var(--_g);
+  background-size: 15% 35%;
 }
 </style>

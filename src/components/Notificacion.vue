@@ -86,6 +86,5 @@ export default {
 .notification-error:focus-visible {
   outline: none;
 }
-
 </style>
   

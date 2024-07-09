@@ -13,7 +13,7 @@
                 <BaseH1 class="text-center hidden">Detalle {{ plagueDetails ? plagueDetails.nombre : '' }}</BaseH1>
             </div>
             <div v-if="plagueDetails" class="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
-                <div  class="bg-white p-4 rounded shadow-md">
+                <div class="bg-white p-4 rounded shadow-md">
                     <BaseH2>{{ plagueDetails.nombre }}</BaseH2>
                     <img :src="'/imgs/plagas/' + plagueDetails.imagen" alt="icono de plaga" class="m-10 mx-auto w-1/2">
                     <p class="my-3"><strong>Nombre Científico:</strong> {{ plagueDetails.nombre_cientifico }}</p>
@@ -29,13 +29,15 @@
 
 <script>
 import axios from 'axios';
-import { subscribeToAuth } from './../service/auth.js';
+
 import BaseH1 from '../components/BaseH1.vue';
 import BaseH2 from '../components/BaseH2.vue';
+
+import { subscribeToAuth } from './../service/auth.js';
+
 export default {
     name: 'plagueDetails',
     components: { BaseH1, BaseH2 },
-
     data() {
         return {
             user: {
@@ -66,5 +68,3 @@ export default {
     },
 };
 </script>
-
-<style></style>

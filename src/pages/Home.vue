@@ -21,7 +21,8 @@
                         </li>
                         <li class="li_user">
                             <form action="#" @submit.prevent="logOuting">
-                                <button class="text-xs text-red-600 p-1 " type="submit">Cerrar
+                                <button class="text-xs text-red-600 p-1 " style="display: flex; align-items: center;"
+                                    type="submit">Cerrar
                                     sesión<span class="material-symbols-sharp">
                                         logout
                                     </span></button>
@@ -71,24 +72,22 @@
                     <PieChart :labels="pieChart.labels" :data="pieChart.data" :backgroundColors="pieChart.colors" />
                 </div>
             </template>
-
         </div>
-
     </div>
 </template>
 
 <script>
 import BaseH1 from '../components/BaseH1.vue';
 import BaseH2 from '../components/BaseH2.vue';
-import { subscribeToAuth, logOut } from '../service/auth.js';
-import { findUserAreas } from "./../service/area.js";
 import LineChart from '../components/LineChart.vue';
 import PieChart from '../components/PieChart.vue';
+
+import { subscribeToAuth, logOut } from '../service/auth.js';
+import { findUserAreas } from "./../service/area.js";
 
 export default {
     name: 'home',
     components: { BaseH1, BaseH2, LineChart, PieChart },
-
     data() {
         return {
             showMenu: false,
@@ -214,7 +213,6 @@ export default {
             }
         }
     },
-
     mounted() {
         subscribeToAuth(user => {
             this.user = { ...user }

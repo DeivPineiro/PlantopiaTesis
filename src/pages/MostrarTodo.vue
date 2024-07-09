@@ -19,17 +19,18 @@
 </template>
 
 <script>
-import BaseButton from '../components/BaseButton.vue';
 import BaseH1 from '../components/BaseH1.vue';
-import BaseInput from '../components/BaseInput.vue';
 import BaseLabel from '../components/BaseLabel.vue';
+import BaseInput from '../components/BaseInput.vue';
+import BaseButton from '../components/BaseButton.vue';
+
 import { subscribeToAuth } from "./../service/auth.js";
-import googleMapsLoader from "../service/google-maps-config.js";
 import { findUserAreas } from "./../service/area.js";
+import googleMapsLoader from "../service/google-maps-config.js";
+
 export default {
     name: 'userAreas',
-    components: { BaseButton, BaseLabel, BaseInput, BaseH1 },
-
+    components: { BaseH1, BaseLabel, BaseInput, BaseButton, },
     data() {
         return {
             user: {
@@ -52,7 +53,6 @@ export default {
         } catch (error) {
             console.error("Error al cargar la API de Google Maps", error);
         }
-
     },
     methods: {
         initMap() {

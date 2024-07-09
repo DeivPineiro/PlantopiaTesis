@@ -49,10 +49,12 @@
 
 <script>
 import axios from 'axios';
+
 import BaseH1 from '../components/BaseH1.vue';
 import BaseH2 from '../components/BaseH2.vue';
-import BaseInput from '../components/BaseInput.vue';
 import BaseLabel from '../components/BaseLabel.vue';
+import BaseInput from '../components/BaseInput.vue';
+
 import { subscribeToAuth } from './../service/auth.js';
 
 export default {
@@ -114,5 +116,3 @@ export default {
     },
 };
 </script>
-
-<style></style>

@@ -22,11 +22,12 @@
 </template>
 
 <script>
-import { UpdateArea } from "../service/area.js";
-import { subscribeToAuth } from "./../service/auth.js";
-import googleMapsLoader from "../service/google-maps-config.js";
 import BaseH1 from "../components/BaseH1.vue";
 import BaseButton from '../components/BaseButton.vue';
+
+import googleMapsLoader from "../service/google-maps-config.js";
+import { UpdateArea } from "../service/area.js";
+import { subscribeToAuth } from "./../service/auth.js";
 
 export default {
     name: 'irAlMapa',

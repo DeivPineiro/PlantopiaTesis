@@ -1,5 +1,7 @@
-<template >
-    <label class="label-base"><slot /></label>
+<template>
+    <label class="label-base">
+        <slot />
+    </label>
 </template>
 <script>
 export default {

@@ -1,16 +1,18 @@
 <template>
-    <div>
-        <div class="max-w-sm bg-white rounded overflow-hidden shadow-lg p-5 my-20 mx-5">
-
-            <router-link to="/home" class="absolute top-2 left-2 scale-75">
-                <button class="p-0 m-0 flex items-center justify-center">
-                    <img class="scale-75 p-0" src="/imgs/back.png" alt="back">
+    <section class="h-screen">
+        <div class="header-map back-wiki">
+            <router-link to="/home" class="back-map">
+                <button class="btn-amarillo">
+                    <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
                 </button>
             </router-link>
-            <BaseH1 class="font-bold text-xl text-center mb-2">Perfil de {{ getEmailPrefix(user.email) }}</BaseH1>                      
-                <p class="text-center"><strong>Email:</strong> {{ user.email }}</p>           
+            <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
         </div>
-    </div>
+        <div class="perfil">
+            <BaseH1 class="text-center">Perfil de {{ getEmailPrefix(user.email) }}</BaseH1>
+            <p class=""><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -20,7 +22,6 @@ import { subscribeToAuth } from "./../service/auth.js";
 export default {
     name: 'perfil',
     components: { BaseH1 },
-
     data() {
         return {
             user: {
@@ -33,10 +34,9 @@ export default {
         subscribeToAuth(user => this.user = { ...user });
     },
     methods: {
-    getEmailPrefix(email) {      
-      return email && email.includes('@') ? email.split('@')[0] : email;
+        getEmailPrefix(email) {
+            return email && email.includes('@') ? email.split('@')[0] : email;
+        },
     },
-  },
 }
 </script>
-<style ></style>
