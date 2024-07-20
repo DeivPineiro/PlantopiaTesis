@@ -72,7 +72,6 @@ export default {
                 await registrar({ ...this.newUser });
                 this.$router.push('/');
             } catch (error) {
-                console.log(error);
                 switch (error.code) {
                     case 'auth/missing-email':
                         this.errorMensaje = 'Por favor, ingresá tu correo electrónico.';

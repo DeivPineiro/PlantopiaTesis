@@ -52,7 +52,7 @@ export async function verificarEmailExistente(email) {
         error.code = 'auth/email-already-in-use';
         throw error;
     }
-    return false;
+    return;
 }
 
 export function login({ email, password }) {
