@@ -10,7 +10,7 @@
         </div>
         <div class="container px-4 mx-auto div-form fondo-blanco">
             <div class="header-form">
-                <BaseH1 class="text-center">TUS CULTIVO</BaseH1>
+                <BaseH1 class="text-center">MIS CULTIVOS</BaseH1>
             </div>
             <div class="grid grid-cols-1 gap-1">
                 <div v-if="!areas || areas.length === 0" class="text-center font-bold text-gray-600 mt-4">
@@ -22,7 +22,7 @@
                             <p class="font-bold">Nombre: <span class="font-normal">{{ area.nombreCosecha }}</span></p>
                             <p class="font-bold">Peso: <span class="font-normal">{{ area.pesoPorCosecha }} kg/km²</span>
                             </p>
-                            <p class="font-bold">USD$ x T/km²: <span class="font-normal">${{ area.valorPorTonelada
+                            <p class="font-bold">USD x t/km²: <span class="font-normal">${{ area.valorPorTonelada
                                     }}</span></p>
                             <p class="font-bold">Área: <span class="font-normal">{{ area.areaKilometros.toFixed(3) }}
                                     km²</span></p>
@@ -37,7 +37,7 @@
                                 <p class="font-normal">{{ traducirColor(area.colorArea) }}</p>
                             </div>
                             <p class="font-bold text-green-700 mt-2">Valor total: <span
-                                    class="font-normal text-black">USD ${{
+                                    class="font-normal text-black">USD {{
                                         (((area.areaKilometros * area.pesoPorCosecha) / 1000) *
                                             area.valorPorTonelada).toFixed(2) }}
                                 </span></p>

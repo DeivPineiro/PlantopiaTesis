@@ -10,7 +10,7 @@
         </div>
         <div class="container px-4 mx-auto div-form fondo-blanco">
             <div class="header-form">
-                <BaseH1 class="text-center">PlatoWiki</BaseH1>
+                <BaseH1 class="text-center">PlantoWiki</BaseH1>
             </div>
             <div class="container-wiki">
                 <div class="box-wiki">
@@ -27,21 +27,21 @@
                 </div>
             </div>
             <div class="info-wiki">
-                <BaseH2>¡Bienvenido a nuestra Plantowiki!</BaseH2>
+                <BaseH2>¡Bienvenido a nuestra PlantoWiki!</BaseH2>
                 <p>Acá podés encontrar toda la información que necesitás sobre una amplia variedad de plantas y las
                     plagas que pueden afectarlas. Nuestra base de datos está llena de detalles esenciales para ayudarte
                     a cuidar y mantener tus cultivos en óptimas condiciones.</p>
-                <BaseH2>¿Qué podés encontrar en Plantowiki?</BaseH2>
-                <p><strong class="slogan-form">Wiki de Plantas:</strong> Información sobre nombres científicos, épocas
+                <BaseH2>¿Qué podés encontrar en PlantoWiki?</BaseH2>
+                <p><strong class="slogan-form">Wiki de plantas:</strong> Información sobre nombres científicos, épocas
                     de crecimiento, rendimientos
                     aproximados, tipos de luz y suelo, y mucho más.</p>
-                <p><strong class="slogan-form"> Wiki de Plagas:</strong> Datos sobre las plagas más comunes, sus nombres
+                <p><strong class="slogan-form">Wiki de plagas:</strong> Datos sobre las plagas más comunes, sus nombres
                     científicos y métodos eficaces para
                     su control y prevención.</p>
-                <BaseH2>Contactanos</BaseH2>
-                <p>Si no encontrás un cultivo específico, tenés dudas sobre cómo utilizar Plantowiki, o tenés
+                <BaseH2>Contactate con nosotros</BaseH2>
+                <p>Si no encontrás un cultivo específico, tenés dudas sobre cómo utilizar PlantoWiki, o tenés
                     información valiosa que podría beneficiar a nuestra comunidad, envianos un correo electrónico a
-                    plantopia@gmail.com</p>
+                    soporte@plantopia.com</p>
             </div>
         </div>
     </section>

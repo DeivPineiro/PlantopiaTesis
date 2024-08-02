@@ -13,14 +13,15 @@
                 <BaseH1 class="text-center">WIKI PLAGAS</BaseH1>
                 <div class="my-6">
                     <BaseLabel>Buscar plaga por nombre:</BaseLabel>
-                    <BaseInput class="mb-4" v-model="searchTerm" placeholder="Ingrese el nombre de la plaga" />
+                    <BaseInput class="mb-4" v-model="searchTerm" placeholder="Ingresá el nombre de la plaga" />
                 </div>
             </div>
             <div v-if="filteredPlagues.length" class="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
                 <div v-for="plague in filteredPlagues" :key="plague.id" class="bg-white p-4 rounded shadow-md">
                     <BaseH2>{{ plague.nombre }}</BaseH2>
                     <img :src="'/imgs/plagas/' + plague.imagen" alt="icono de plaga" class="m-2 mx-auto w-1/4">
-                    <p class="text-wiki"><strong class="slogan-form">Nombre Científico:</strong> {{ plague.nombre_cientifico }}</p>
+                    <p class="text-wiki"><strong class="slogan-form">Nombre Científico:</strong> {{
+                        plague.nombre_cientifico }}</p>
                     <p class="text-wiki"><strong class="slogan-form">Solución:</strong> {{ plague.solucion }}</p>
                 </div>
             </div>
@@ -85,3 +86,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.fondo-blanco {
+    padding-top: 60px;
+}
+</style>

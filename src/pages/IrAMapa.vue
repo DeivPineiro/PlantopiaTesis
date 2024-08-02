@@ -15,7 +15,7 @@
         <div id="mapContainer" class="vista-map">
             <div id="map" class="w-full h-full"></div>
             <div id="buttonContainer" class="finish-map">
-                <BaseButton @click="handleSubmit()" :cargando="formCarga" class="mt-10">Editar Área</BaseButton>
+                <BaseButton @click="handleSubmit()" :cargando="formCarga" class="mt-10">Editar área</BaseButton>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@
                     <ul class="py-2">
                         <li class="li_user">
                             <router-link to="/perfil" class="text-xs p-1">
-                                Mi Perfil
+                                Mi perfil
                             </router-link>
                         </li>
                         <li class="li_user">
@@ -52,12 +52,12 @@
         <div class="pt-5  home">
             <template v-if="!areas || areas.length === 0">
                 <div class="text-center font-bold text-gray-600 mt-4">
-                    <p>No tienes áreas cargadas.</p>
+                    <p>No tenés áreas cargadas.</p>
                 </div>
             </template>
             <template v-else>
                 <div class="text-center chart-container">
-                    <BaseH2>Tus Estadisticas</BaseH2>
+                    <BaseH2 class="font-bold text-2xl">Mis Estadísticas</BaseH2>
                     <div style="display: flex;">
                         <div class="estadisticas">
                             <p>Cobertura total</p>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="estadisticas">
                             <p>Valor cosechas</p>
-                            <p>{{ totalValorAreas.toFixed(2) }} USD$</p>
+                            <p>USD {{ totalValorAreas.toFixed(2) }}</p>
                         </div>
                     </div>
                     <LineChart :labels="lineChart.labels" :data="lineChart.data" />
@@ -104,7 +104,7 @@ export default {
             lineChart: {
                 labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                 data: {
-                    nombre: 'Mes de Cosecha / USD',
+                    nombre: 'Mes de cosecha / USD',
                     valores: new Array(12).fill(null)
                 },
             },
@@ -230,6 +230,7 @@ export default {
 
 <style scoped>
 h2 {
-    font-size: 20px;
+    text-transform: uppercase;
+    color: #000;
 }
 </style>

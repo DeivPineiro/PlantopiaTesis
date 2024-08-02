@@ -21,7 +21,7 @@
             <form action="#" @submit.prevent="CrearArea">
                 <div class="max-w-lg mx-auto py-4">
                     <div class="mb-6">
-                        <BaseLabel for="nombreCosecha">Identificá a tu cultivo</BaseLabel>
+                        <BaseLabel for="nombreCosecha">Identificá tu cultivo</BaseLabel>
                         <BaseInput type="text" id="nombreCosecha" v-model="nombreCosecha" />
                     </div>
                     <div class="mb-6">
@@ -29,7 +29,7 @@
                         <BaseInput type="number" id="pesoPorCosecha" v-model="pesoPorCosecha" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="valorPorTonelada">Valor por Tonelada (USD$)</BaseLabel>
+                        <BaseLabel for="valorPorTonelada">Valor por tonelada (USD)</BaseLabel>
                         <BaseInput type="number" id="valorPorTonelada" v-model="valorPorTonelada" />
                     </div>
                     <div class="mb-6">
@@ -48,17 +48,17 @@
                             <option value="green">Verde</option>
                             <option value="yellow">Amarillo</option>
                             <option value="orange">Naranja</option>
-                            <option value="purple">Purpura</option>
+                            <option value="purple">Violeta</option>
                             <option value="pink">Rosa</option>
                             <option value="black">Negro</option>
                             <option value="white">Blanco</option>
                             <option value="gray">Gris</option>
-                            <option value="brown">Marron</option>
-                            <option value="cyan">Cyan</option>
+                            <option value="brown">Marrón</option>
+                            <option value="cyan">Cian</option>
                             <option value="magenta">Magenta</option>
                         </select>
                     </div>
-                    <button @click="preCalcular" class="btn-amarillo mb-6">Pre-Calcular</button>
+                    <button @click="preCalcular" class="btn-amarillo mb-6">Precalcular</button>
                     <div>
                         <Notificacion v-if="showNotification" :type="notificationType" :message="notificationMessage" />
                     </div>
@@ -133,7 +133,7 @@ export default {
             const valor = parseFloat(this.valorPorTonelada);
 
             if (isNaN(area) || isNaN(peso) || isNaN(valor) || !area || !peso || !valor) {
-                this.showNotificationMessage('error', 'Asegurate de ingresar valores válidos y no vacíos para área, peso y valor.');
+                this.showNotificationMessage('error', 'Ingresá valores válidos y no vacíos para área, peso y valor.');
             } else {
                 this.resultado = ((area * peso) / 1000) * valor;
                 this.showNotificationMessage('success', `Ganarías un aproximado de ${this.resultado.toFixed(2)} USD$`);

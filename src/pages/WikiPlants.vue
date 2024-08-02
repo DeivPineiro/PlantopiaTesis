@@ -13,7 +13,7 @@
                 <BaseH1 class="text-center">WIKI PLANTAS</BaseH1>
                 <div class="my-6">
                     <BaseLabel>Buscar planta por nombre:</BaseLabel>
-                    <BaseInput v-model="searchTerm" placeholder="Ingrese el nombre de la planta" />
+                    <BaseInput v-model="searchTerm" placeholder="Ingresá el nombre de la planta" />
                 </div>
             </div>
             <div v-if="filteredPlants.length" class="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
@@ -21,13 +21,16 @@
                     <BaseH2>{{ plant.nombre }}</BaseH2>
                     <img :src="'/imgs/plantas/' + plant.imagen" :alt="'Imagen de la planta ' + plant.nombre"
                         class="m-2 mx-auto w-1/4">
-                    <p class="text-wiki"><strong class="slogan-form">Nombre Científico:</strong> {{ plant.nombre_cientifico }}</p>
+                    <p class="text-wiki"><strong class="slogan-form">Nombre Científico:</strong> {{
+                        plant.nombre_cientifico }}</p>
                     <p class="text-wiki"><strong class="slogan-form">Estación:</strong> {{ plant.estacion }}</p>
-                    <p class="text-wiki"><strong class="slogan-form">Cosecha aprox:</strong> {{ plant.kg_cosecha_km2 }} kg/km²</p>
+                    <p class="text-wiki"><strong class="slogan-form">Cosecha aprox:</strong> {{ plant.kg_cosecha_km2 }}
+                        kg/km²</p>
                     <p class="text-wiki"><strong class="slogan-form">Tipo de luz:</strong> {{ plant.luz }}</p>
                     <p class="text-wiki"><strong class="slogan-form">Ph:</strong> {{ plant.ph }}</p>
                     <p class="text-wiki"><strong class="slogan-form">Tipo de planta:</strong> {{ plant.tipo }}</p>
-                    <p class="text-wiki"><strong class="slogan-form">Tipo de terreno:</strong> {{ plant.tipo_terreno }}</p>
+                    <p class="text-wiki"><strong class="slogan-form">Tipo de terreno:</strong> {{ plant.tipo_terreno }}
+                    </p>
                     <p class="text-wiki leading-8">
                         <strong class="slogan-form">Plagas: </strong>
                         <span v-for="plagueId in plant.plagas" :key="plagueId">
@@ -116,3 +119,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.fondo-blanco {
+    padding-top: 60px;
+}
+</style>
