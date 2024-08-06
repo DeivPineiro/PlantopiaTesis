@@ -53,7 +53,7 @@
                         </select>
                     </div>
                     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
-                    <button @click="preCalculate" class="btn-amarillo mb-6">Precalcular</button>
+                    <button @click.prevent="preCalculate" class="btn-amarillo mb-6">Precalcular</button>
                     <div>
                         <Notificacion v-if="showNotification" :type="notificationType" :message="notificationMessage" />
                     </div>

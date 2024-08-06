@@ -1,9 +1,11 @@
 <template>
     <section class="h-screen">
         <div class="header-map">
+            <div class="back-map">
             <button class="btn-amarillo" @click="goHome">
                 <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
             </button>
+        </div>
             <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
         </div>
         <div class="container px-4 mx-auto div-form fondo-blanco">
