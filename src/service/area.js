@@ -3,7 +3,7 @@ import { getDocs, limit, addDoc, collection, onSnapshot, serverTimestamp, query,
 
 const userRef = collection(db, 'usuarios');
 
-export async function CreateArea(uid, data) {
+export async function createArea(uid, data) {
     const thisUserRef = doc(userRef, uid);
     const areaRef = collection(thisUserRef, 'areas');
     return addDoc(areaRef, { ...data, creado: serverTimestamp() });
@@ -16,7 +16,7 @@ export async function UpdateArea(idUser, idArea, data) {
     if (areaSnapshot.exists()) {
         return await updateDoc(areaDocRef, {
             poligons: data.poligons,
-            areaKilometros: data.areaKilometros,
+            areaKilometros: data.areaKilometers,
             creado: serverTimestamp(),
         });
         return null;
@@ -29,12 +29,12 @@ export async function addNewDataArea(idUser, idArea, data) {
     const areaSnapshot = await getDoc(areaDocRef);
     if (areaSnapshot.exists()) {
         return await updateDoc(areaDocRef, {
-            nombreCosecha: data.nombreCosecha,
-            pesoPorCosecha: data.pesoPorCosecha,
-            valorPorTonelada: data.valorPorTonelada,
-            colorArea: data.colorArea,
-            diaPlantacion: data.diaPlantacion,
-            diaCosecha: data.diaCosecha
+            nombreCosecha: data.name,
+            pesoPorCosecha: data.weightPerHarvest,
+            valorPorTonelada: data.valuePerTon,
+            colorArea: data.areaColor,
+            diaPlantacion: data.plantationDate,
+            diaCosecha: data.harvestDate
         });
         return null;
     }
@@ -51,7 +51,7 @@ export async function lastAreaById(id) {
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
             const lastAreaDoc = querySnapshot.docs[0];
-            const lastAreaData = { id: lastAreaDoc.id, ...lastAreaDoc.data() };           
+            const lastAreaData = { id: lastAreaDoc.id, ...lastAreaDoc.data() };
             return lastAreaData;
         }
     }
@@ -65,15 +65,15 @@ export function findUserAreas(userId, callback) {
         const data = snapshot.docs.map((doc) => {
             return {
                 id: doc.id,
-                nombreCosecha: doc.data().nombreCosecha,
-                pesoPorCosecha: doc.data().pesoPorCosecha,
-                valorPorTonelada: doc.data().valorPorTonelada,
+                name: doc.data().nombreCosecha,
+                weightPerHarvest: doc.data().pesoPorCosecha,
+                valuePerTon: doc.data().valorPorTonelada,
                 poligons: doc.data().poligons,
-                areaKilometros: doc.data().areaKilometros,
-                creado: doc.data().creado,
-                colorArea: doc.data().colorArea,
-                diaPlantacion: doc.data().diaPlantacion,
-                diaCosecha: doc.data().diaCosecha
+                areaKilometers: doc.data().areaKilometros,
+                created: doc.data().creado,
+                areaColor: doc.data().colorArea,
+                plantationDate: doc.data().diaPlantacion,
+                harvestDate: doc.data().diaCosecha
             };
         });
         callback(data);
@@ -81,22 +81,22 @@ export function findUserAreas(userId, callback) {
 }
 
 export function findAreaById(userId, areaId, callback) {
-    const usuarioRef = doc(db, 'usuarios', userId);
-    const areaRef = doc(usuarioRef, 'areas', areaId);
+    const userRef = doc(db, 'usuarios', userId);
+    const areaRef = doc(userRef, 'areas', areaId);
     getDoc(areaRef).then((docSnapshot) => {
         if (docSnapshot.exists()) {
             const areaData = docSnapshot.data();
             callback({
                 id: docSnapshot.id,
-                nombreCosecha: areaData.nombreCosecha,
-                pesoPorCosecha: areaData.pesoPorCosecha,
-                valorPorTonelada: areaData.valorPorTonelada,
+                name: areaData.nombreCosecha,
+                weightPerHarvest: areaData.pesoPorCosecha,
+                valuePerTon: areaData.valorPorTonelada,
                 poligons: areaData.poligons,
-                areaKilometros: areaData.areaKilometros,
-                creado: areaData.creado,
-                colorArea: areaData.colorArea,
-                diaPlantacion: areaData.diaPlantacion,
-                diaCosecha: areaData.diaCosecha
+                areaKilometers: areaData.areaKilometros,
+                created: areaData.creado,
+                areaColor: areaData.colorArea,
+                plantationDate: areaData.diaPlantacion,
+                harvestDate: areaData.diaCosecha
             });
         } else {
             callback(null);
@@ -105,8 +105,8 @@ export function findAreaById(userId, areaId, callback) {
 }
 
 export async function deleteArea(userId, areaId) {
-    const usuarioRef = doc(db, 'usuarios', userId);
-    const areaRef = doc(usuarioRef, 'areas', areaId);
+    const userRef = doc(db, 'usuarios', userId);
+    const areaRef = doc(userRef, 'areas', areaId);
     try {
         return await deleteDoc(areaRef);
     } catch (error) {

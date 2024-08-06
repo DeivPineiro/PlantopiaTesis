@@ -61,11 +61,11 @@
                     <div style="display: flex;">
                         <div class="estadisticas">
                             <p>Cobertura total</p>
-                            <p>{{ coberturaTotal }} km²</p>
+                            <p>{{ totalCoverage }} km²</p>
                         </div>
                         <div class="estadisticas">
                             <p>Valor cosechas</p>
-                            <p>USD {{ totalValorAreas.toFixed(2) }}</p>
+                            <p>USD {{ totalValueOfAreas.toFixed(2) }}</p>
                         </div>
                     </div>
                     <LineChart :labels="lineChart.labels" :data="lineChart.data" />
@@ -98,14 +98,14 @@ export default {
                 rol: null,
             },
             areas: null,
-            areasUnsuscribe: () => { },
-            coberturaTotal: null,
-            totalValorAreas: 0,
+            unsubscribeAreas: () => { },
+            totalCoverage: null,
+            totalValueOfAreas: 0,
             lineChart: {
                 labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
                 data: {
-                    nombre: 'Mes de cosecha / USD',
-                    valores: new Array(12).fill(null)
+                    name: 'Mes de cosecha / USD',
+                    values: new Array(12).fill(null)
                 },
             },
             pieChart: {
@@ -113,7 +113,7 @@ export default {
                 data: null,
                 colors: null,
             },
-            colorsPieChart: [
+            pieChartColors: [
                 'rgb(255, 99, 132)',   // red
                 'rgb(255, 159, 64)',   // orange
                 'rgb(255, 205, 86)',   // yellow
@@ -135,79 +135,77 @@ export default {
         navigateTo(route) {
             this.$router.push(route);
         },
-        obtenerAreasPorMes() {
-            const areasPorMes = Array.from({ length: 12 }, () => []);
+        getAreasByMonth() {
+            const areasByMonth = Array.from({ length: 12 }, () => []);
             if (this.areas && this.areas.length > 0) {
                 this.areas.forEach(area => {
-                    let fecha;
-                    fecha = new Date(area.diaCosecha);
-                    if (fecha) {
-                        const mes = fecha.getMonth();
-                        areasPorMes[mes].push(area);
+                    let date;
+                    date = new Date(area.harvestDate);
+                    if (date) {
+                        const month = date.getMonth();
+                        areasByMonth[month].push(area);
                     }
                 });
             }
-            return areasPorMes;
+            return areasByMonth;
         },
-        obtenerValoresCosechaUsd() {
-            const areasPorMes = this.obtenerAreasPorMes();
-            const valoresPorMes = areasPorMes.map(mesAreas => {
+        getHarvestValuesUsd() {
+            const areasByMonth = this.getAreasByMonth();
+            const valuesByMonth = areasByMonth.map(monthAreas => {
                 // Sumar el valor calculado para cada área en el mes
-                const sumaValores = mesAreas.reduce((total, area) => {
-                    const valorArea = (((area.areaKilometros * area.pesoPorCosecha) / 1000) * area.valorPorTonelada);
-                    return total + valorArea;
+                const totalValues = monthAreas.reduce((total, area) => {
+                    const areaValue = (((area.areaKilometers * area.weightPerHarvest) / 1000) * area.valuePerTon);
+                    return total + areaValue;
                 }, 0);
                 // Redondear la suma a dos decimales
-                return sumaValores.toFixed(0);
+                return totalValues.toFixed(0);
             });
-            return valoresPorMes;
+            return valuesByMonth;
         },
-        obtenerAreasByNombre() {
-            let areasAgrupadas = {};
+        getAreasByName() {
+            let groupedAreas = {};
             let colorIndex = 0;
 
             // Recorrer todas las áreas
             this.areas.forEach(area => {
                 // Verificar si ya existe una entrada para el nombre de cosecha actual
-                if (areasAgrupadas.hasOwnProperty(area.nombreCosecha)) {
+                if (groupedAreas.hasOwnProperty(area.name)) {
                     // Sumar el área actual al área acumulada
-                    areasAgrupadas[area.nombreCosecha].areaKilometros += area.areaKilometros;
+                    groupedAreas[area.name].areaKilometers += area.areaKilometers;
                 } else {
                     // Si no existe, crear una nueva entrada para el nombre de cosecha
-                    areasAgrupadas[area.nombreCosecha] = {
-                        nombre: area.nombreCosecha,
-                        areaKilometros: area.areaKilometros,
-                        color: this.obtenerColor(colorIndex)  // Función para obtener un color aleatorio
+                    groupedAreas[area.name] = {
+                        name: area.name,
+                        areaKilometers: area.areaKilometers,
+                        color: this.getColor(colorIndex)  // Función para obtener un color aleatorio
                     };
                     colorIndex++;
                 }
             });
 
             // Extraer los resultados en arreglos separados
-            let nombres = Object.keys(areasAgrupadas);
-            let areas = nombres.map(nombre => areasAgrupadas[nombre].areaKilometros);
-            let colores = nombres.map(nombre => areasAgrupadas[nombre].color);
+            let names = Object.keys(groupedAreas);
+            let areas = names.map(name => groupedAreas[name].areaKilometers);
+            let colors = names.map(name => groupedAreas[name].color);
 
-            this.pieChart.labels = nombres;
+            this.pieChart.labels = names;
             this.pieChart.data = areas;
-            this.pieChart.colors = colores;
+            this.pieChart.colors = colors;
         },
-
-        obtenerColor(i) {
-            const color = this.colorsPieChart[i % this.colorsPieChart.length];
+        getColor(i) {
+            const color = this.pieChartColors[i % this.pieChartColors.length];
             return color;
         },
-
-        calcularCoberturaTotal() {
+        calculateTotalCoverage() {
             if (this.areas && this.areas.length > 0) {
-                return this.areas.reduce((total, area) => total + area.areaKilometros, 0).toFixed(3);
+                return this.areas.reduce((total, area) => total + area.areaKilometers, 0).toFixed(3);
             } else {
                 return 0;
             }
         },
-        calcularValorTotalAreas() {
+        calculateTotalValueOfAreas() {
             if (this.areas && this.areas.length > 0) {
-                return this.areas.reduce((total, area) => total + (((area.areaKilometros * area.pesoPorCosecha) / 1000) * area.valorPorTonelada), 0);
+                return this.areas.reduce((total, area) => total + (((area.areaKilometers * area.weightPerHarvest) / 1000) * area.valuePerTon), 0);
             } else {
                 return 0;
             }
@@ -217,12 +215,12 @@ export default {
         subscribeToAuth(user => {
             this.user = { ...user }
         });
-        this.areasUnsuscribe = findUserAreas(this.user.id, (areas) => {
+        this.unsubscribeAreas = findUserAreas(this.user.id, (areas) => {
             this.areas = areas;
-            this.coberturaTotal = this.calcularCoberturaTotal();
-            this.totalValorAreas = this.calcularValorTotalAreas();
-            this.lineChart.data.valores = this.obtenerValoresCosechaUsd();
-            this.pieChart.valores = this.obtenerAreasByNombre();
+            this.totalCoverage = this.calculateTotalCoverage();
+            this.totalValueOfAreas = this.calculateTotalValueOfAreas();
+            this.lineChart.data.values = this.getHarvestValuesUsd();
+            this.pieChart.values = this.getAreasByName();
         });
     },
 }

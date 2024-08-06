@@ -102,10 +102,30 @@ input.login {
   border-bottom: 1px solid white;
   border-radius: 0;
   padding: 0 5px;
-  font-size: small;
+  font-size: 15px;
   color: white;
   font-weight: 100;
   width: 100%;
+  height: 30px;
+}
+
+input.login:hover {
+  border: 2px solid white;
+  border-radius: 2px;
+}
+
+#email.login:-webkit-autofill,
+#email.login:-internal-autofill-selected {
+  box-shadow: 0 0 0 1000px #00374d inset !important;
+  -webkit-text-fill-color: white !important;
+  caret-color: white;
+}
+
+#password.login:-webkit-autofill,
+#password.login:-internal-autofill-selected {
+  box-shadow: 0 0 0 1000px #024057 inset !important;
+  -webkit-text-fill-color: white !important;
+  caret-color: white;
 }
 
 input.login:focus-visible {
@@ -167,13 +187,18 @@ a.registrarse:hover {
   align-items: center;
 }
 
-.error-login {
+.error-login,
+.error {
   color: #FF5526;
   font-size: small;
   text-align: left;
   margin: 0 0 10px 0;
   padding: 0;
   font-style: italic;
+}
+
+.error {
+  color: red;
 }
 
 .bi-eye::before {
@@ -402,7 +427,8 @@ button.gm-svpc {
 .btn-eye {
   position: relative;
   color: #fff;
-  bottom: 24px;
+  bottom: 25px;
+  right: 5px;
 }
 
 .estadisticas {

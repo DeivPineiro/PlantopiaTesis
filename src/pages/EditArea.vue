@@ -12,31 +12,31 @@
             <div class="header-form">
                 <BaseH1 class="text-center">Editá tu cosecha</BaseH1>
             </div>
-            <form action="#" @submit.prevent="CrearArea">
+            <form action="#" @submit.prevent="save">
                 <div class="max-w-lg mx-auto py-4">
                     <div class="mb-6">
-                        <BaseLabel for="nombreCosecha">Identificá tu cultivo</BaseLabel>
-                        <BaseInput type="text" id="nombreCosecha" v-model="nombreCosecha" />
+                        <BaseLabel for="name">Identificá tu cultivo</BaseLabel>
+                        <BaseInput type="text" id="name" v-model="name" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="pesoPorCosecha">Peso proyectado (kg/km²)</BaseLabel>
-                        <BaseInput type="number" id="pesoPorCosecha" v-model="pesoPorCosecha" />
+                        <BaseLabel for="weightPerHarvest">Peso proyectado (kg/km²)</BaseLabel>
+                        <BaseInput type="number" id="weightPerHarvest" v-model="weightPerHarvest" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="valorPorTonelada">Valor por tonelada (USD)</BaseLabel>
-                        <BaseInput type="number" id="valorPorTonelada" v-model="valorPorTonelada" />
+                        <BaseLabel for="valuePerTon">Valor por tonelada (USD)</BaseLabel>
+                        <BaseInput type="number" id="valuePerTon" v-model="valuePerTon" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="diaPlantacion">Día de plantación</BaseLabel>
-                        <BaseInput type="date" id="diaPlantacion" v-model="diaPlantacion" />
+                        <BaseLabel for="plantationDate">Día de plantación</BaseLabel>
+                        <BaseInput type="date" id="plantationDate" v-model="plantationDate" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="diaCosecha">Día de cosecha estimada</BaseLabel>
-                        <BaseInput type="date" id="diaCosecha" v-model="diaCosecha" />
+                        <BaseLabel for="harvestDate">Día de cosecha estimada</BaseLabel>
+                        <BaseInput type="date" id="harvestDate" v-model="harvestDate" />
                     </div>
                     <div class="mb-6">
-                        <BaseLabel for="colorArea">Color del área</BaseLabel>
-                        <select class="input-base" id="colorArea" v-model="colorArea">
+                        <BaseLabel for="areaColor">Color del área</BaseLabel>
+                        <select class="input-base" id="areaColor" v-model="areaColor">
                             <option value="red">Rojo</option>
                             <option value="blue">Azul</option>
                             <option value="green">Verde</option>
@@ -52,11 +52,12 @@
                             <option value="magenta">Magenta</option>
                         </select>
                     </div>
-                    <button @click="preCalcular" class="btn-amarillo mb-6">Precalcular</button>
+                    <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+                    <button @click="preCalculate" class="btn-amarillo mb-6">Precalcular</button>
                     <div>
                         <Notificacion v-if="showNotification" :type="notificationType" :message="notificationMessage" />
                     </div>
-                    <BaseButton @click="guardar" class="mt-10">Guardar</BaseButton>
+                    <BaseButton :cargando="isLoading" class="mt-10">Guardar</BaseButton>
                 </div>
             </form>
         </div>
@@ -85,58 +86,151 @@ export default {
                 email: null,
             },
             idArea: null,
-            nombreCosecha: null,
-            pesoPorCosecha: null,
-            valorPorTonelada: null,
-            colorArea: 'yellow',
-            diaPlantacion: null,
-            diaCosecha: null,
-            areaKilometros: 0,
+            name: null,
+            weightPerHarvest: null,
+            valuePerTon: null,
+            areaColor: 'yellow',
+            plantationDate: null,
+            harvestDate: null,
+            areaKilometers: 0,
             showNotification: false,
             notificationType: '',
             notificationMessage: '',
+            isLoading: false,
+            errorMessage: '',
         }
     },
     mounted() {
         const areaId = this.$route.query.idArea;
-        const akm = this.$route.query.areaKilometros;
+        const akm = this.$route.query.areaKilometers;
         this.idArea = areaId;
-        this.areaKilometros = akm;
+        this.areaKilometers = akm;
         subscribeToAuth(user => this.user = { ...user });
         findAreaById(this.user.id, this.idArea, (area) => {
             if (area) {
-                this.nombreCosecha = area.nombreCosecha;
-                this.pesoPorCosecha = area.pesoPorCosecha;
-                this.valorPorTonelada = area.valorPorTonelada;
-                this.colorArea = area.colorArea;
-                this.diaPlantacion = area.diaPlantacion,
-                    this.diaCosecha = area.diaCosecha
+                this.name = area.name;
+                this.weightPerHarvest = area.weightPerHarvest;
+                this.valuePerTon = area.valuePerTon;
+                this.areaColor = area.areaColor;
+                this.plantationDate = area.plantationDate;
+                this.harvestDate = area.harvestDate;
             }
         });
     },
     methods: {
-        async guardar() {
-            const data = {
-                nombreCosecha: this.nombreCosecha,
-                pesoPorCosecha: parseFloat(this.pesoPorCosecha),
-                valorPorTonelada: parseFloat(this.valorPorTonelada),
-                colorArea: this.colorArea,
-                diaPlantacion: this.diaPlantacion,
-                diaCosecha: this.diaCosecha
-            };
-            await addNewDataArea(this.user.id, this.idArea, data);
-            router.push('/user/areas');
-        },
-        preCalcular() {
-            const area = parseFloat(this.areaKilometros);
-            const peso = parseFloat(this.pesoPorCosecha);
-            const valor = parseFloat(this.valorPorTonelada);
+        async save() {
+            this.isLoading = true;
+            this.errorMessage = '';
 
-            if (isNaN(area) || isNaN(peso) || isNaN(valor) || !area || !peso || !valor) {
+            try {
+                const data = {
+                    name: this.name,
+                    weightPerHarvest: parseFloat(this.weightPerHarvest),
+                    valuePerTon: parseFloat(this.valuePerTon),
+                    areaColor: this.areaColor,
+                    plantationDate: this.plantationDate,
+                    harvestDate: this.harvestDate
+                };
+                const validData = this.areaValidations(data);
+                await addNewDataArea(this.user.id, this.idArea, data);
+                router.push('/user/areas');
+            } catch (error) {
+                switch (error.code) {
+                    case 'auth/missing-name':
+                        this.errorMessage = 'Por favor, ingresá el nombre del cultivo.';
+                        break;
+                    case 'auth/missing-weightHarvest':
+                        this.errorMessage = 'Por favor, ingresá el peso proyectado.';
+                        break;
+                    case 'auth/invalid-weightHarvest':
+                        this.errorMessage = 'Por favor, el peso proyectado tiene que ser un número válido.';
+                        break;
+                    case 'auth/missing-valueTon':
+                        this.errorMessage = 'Por favor, ingresá el valor por tonelada.';
+                        break;
+                    case 'auth/invalid-valueTon':
+                        this.errorMessage = 'Por favor, el valor por tonelada tiene que ser un número válido.';
+                        break;
+                    case 'auth/missing-area':
+                        this.errorMessage = 'Falta la información del área. Por favor, volvé a marcar el área en el mapa.';
+                        break;
+                    case 'auth/missing-color':
+                        this.errorMessage = 'Por favor, elegí un color para el área.';
+                        break;
+                    case 'auth/missing-plantationDate':
+                        this.errorMessage = 'Por favor, ingresá el día de plantación.';
+                        break;
+                    case 'auth/invalid-plantationDate':
+                        this.errorMessage = 'Por favor, el día de plantación tiene que ser una fecha válida.';
+                        break;
+                    case 'auth/missing-harvestDate':
+                        this.errorMessage = 'Por favor, ingresá el día de cosecha estimada.';
+                        break;
+                    case 'auth/invalid-harvestDate':
+                        this.errorMessage = 'Por favor, el día de cosecha estimada tiene que ser una fecha válida.';
+                        break;
+                }
+            } finally {
+                this.isLoading = false;
+            }
+        },
+        areaValidations(data) {
+            if (!data.name) {
+                const error = new Error();
+                error.code = 'auth/missing-name';
+                throw error;
+            } else if (!data.weightPerHarvest) {
+                const error = new Error();
+                error.code = 'auth/missing-weightHarvest';
+                throw error;
+            } else if (isNaN(data.weightPerHarvest)) {
+                const error = new Error();
+                error.code = 'auth/invalid-weightHarvest';
+                throw error;
+            } else if (!data.valuePerTon) {
+                const error = new Error();
+                error.code = 'auth/missing-valueTon';
+                throw error;
+            } else if (isNaN(data.valuePerTon)) {
+                const error = new Error();
+                error.code = 'auth/invalid-valueTon';
+                throw error;
+            } else if (!this.idArea) {
+                const error = new Error();
+                error.code = 'auth/missing-area';
+                throw error;
+            } else if (!data.areaColor) {
+                const error = new Error();
+                error.code = 'auth/missing-color';
+                throw error;
+            } else if (!data.plantationDate) {
+                const error = new Error();
+                error.code = 'auth/missing-plantationDate';
+                throw error;
+            } else if (!Date.parse(data.plantationDate)) {
+                const error = new Error();
+                error.code = 'auth/invalid-plantationDate';
+                throw error;
+            } else if (!data.harvestDate) {
+                const error = new Error();
+                error.code = 'auth/missing-harvestDate';
+                throw error;
+            } else if (!Date.parse(data.harvestDate)) {
+                const error = new Error();
+                error.code = 'auth/invalid-harvestDate';
+                throw error;
+            }
+        },
+        preCalculate() {
+            const area = parseFloat(this.areaKilometers);
+            const weight = parseFloat(this.weightPerHarvest);
+            const value = parseFloat(this.valuePerTon);
+
+            if (isNaN(area) || isNaN(weight) || isNaN(value) || !area || !weight || !value) {
                 this.showNotificationMessage('error', 'Ingresá valores válidos y no vacíos para área, peso y valor.');
             } else {
-                this.resultado = ((area * peso) / 1000) * valor;
-                this.showNotificationMessage('success', `Ganarías un aproximado de ${this.resultado.toFixed(2)} USD$`);
+                this.result = ((area * weight) / 1000) * value;
+                this.showNotificationMessage('success', `Ganarías un aproximado de ${this.result.toFixed(2)} USD$`);
             }
         },
         showNotificationMessage(type, message) {

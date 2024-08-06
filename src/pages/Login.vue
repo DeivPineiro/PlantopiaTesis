@@ -1,7 +1,7 @@
 <template>
     <form class="h-screen"
         style=" background-image: url('/imgs/login.jpg'); background-size: cover; background-position: center;"
-        action="#" @submit.prevent="Logining">
+        action="#" @submit.prevent="logining">
         <section class="p-4 h-screen section-form">
             <BaseH1 class="text-center titulo-login">Plantopia</BaseH1>
             <p class="slogan-login">Bienvenidos a la revolución <span>verde</span></p>
@@ -10,20 +10,20 @@
                 <div class="max-w-lg mx-auto py-4">
                     <div class="mb-2">
                         <BaseLabel class="login" for="email">E-mail</BaseLabel>
-                        <BaseInput class="login" type="email" id="email" v-model="form.email" :disabled="logingCarga" />
+                        <BaseInput class="login" type="email" id="email" autocomplete="email" v-model="form.email" :disabled="isLoading" />
                     </div>
                     <div class="mb-2"
-                        style="padding-top: 1rem; display: flex; flex-direction: column; align-items: flex-end;">
+                        style="display: flex; flex-direction: column; align-items: flex-end;">
                         <BaseLabel class="login" for="password" style="width: 100%;">Contraseña</BaseLabel>
                         <BaseInput class="login" :type="showPassword ? 'text' : 'password'" type="password"
-                            id="password" v-model="form.password" :disabled="logingCarga" />
+                            id="password" autocomplete="current-password" v-model="form.password" :disabled="isLoading" />
                         <button class="toggle-password btn-eye" @click="togglePasswordVisibility">
                             <span
                                 v-html="showPassword ? '<i class=\'bi bi-eye-slash\'></i>' : '<i class=\'bi bi-eye\'></i>'"></span>
                         </button>
                     </div>
-                    <div v-if="errorMensaje" class="error-login">{{ errorMensaje }}</div>
-                    <BaseButton class="mt-10" :cargando="logingCarga">Ingresar</BaseButton>
+                    <div v-if="errorMessage" class="error-login">{{ errorMessage }}</div>
+                    <BaseButton class="mt-10" :cargando="isLoading">Ingresar</BaseButton>
                     <p class="registrarse">
                         ¿No tenés una cuenta?<router-link class="registrarse" to="/register"> ¡Registrate!</router-link>
                     </p>
@@ -47,12 +47,12 @@ export default {
     emits: ['logged'],
     data() {
         return {
-            logingCarga: false,
+            isLoading: false,
             form: {
                 email: '',
                 password: ''
             },
-            errorMensaje: '',
+            errorMessage: '',
             showPassword: false
         };
     },
@@ -61,9 +61,9 @@ export default {
             event.preventDefault();
             this.showPassword = !this.showPassword;
         },
-        Logining() {
-            this.logingCarga = true;
-            this.errorMensaje = '';
+        logining() {
+            this.isLoading = true;
+            this.errorMessage = '';
 
             login({
                 ...this.form
@@ -71,26 +71,26 @@ export default {
                 if (response.code) {
                     switch (response.code) {
                         case 'auth/invalid-email':
-                            this.errorMensaje = 'Por favor, ingresá tu correo electrónico.';
+                            this.errorMessage = 'Por favor, ingresá tu correo electrónico.';
                             break;
                         case 'auth/missing-password':
-                            this.errorMensaje = 'Por favor, ingresá tu contraseña.';
+                            this.errorMessage = 'Por favor, ingresá tu contraseña.';
                             break;
                         case 'auth/invalid-login-credentials':
-                            this.errorMensaje = 'Credenciales inválidas. Por favor, verificá tu correo y/o contraseña.';
+                            this.errorMessage = 'Credenciales inválidas. Por favor, verificá tu correo y/o contraseña.';
                             break;
                         case 'auth/too-many-requests':
-                            this.errorMensaje = 'Demasiados intentos. Por favor, intentá de nuevo más tarde.';
+                            this.errorMessage = 'Demasiados intentos. Por favor, intentá de nuevo más tarde.';
                             break;
                         default:
-                            this.errorMensaje = 'Error al iniciar sesión. Por favor, verificá tu correo y/o contraseña.';
+                            this.errorMessage = 'Error al iniciar sesión. Por favor, verificá tu correo y/o contraseña.';
                     }
                 } else {
                     this.$emit('logged', { ...response.user });
                     this.$router.push('/home');
                 }
             }).finally(() => {
-                this.logingCarga = false;
+                this.isLoading = false;
             });
         }
     }

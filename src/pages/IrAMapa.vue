@@ -8,14 +8,14 @@
                 </button>
             </router-link>
             <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
-            <div id="areaKilometros" class="info-map">
+            <div id="areaKilometers" class="info-map">
                 <p>{{ areaText }}</p>
             </div>
         </div>
         <div id="mapContainer" class="vista-map">
             <div id="map" class="w-full h-full"></div>
             <div id="buttonContainer" class="finish-map">
-                <BaseButton @click="handleSubmit()" :cargando="formCarga" class="mt-10">Editar área</BaseButton>
+                <BaseButton @click="handleSubmit()" :cargando="isLoading" class="mt-10">Editar área</BaseButton>
             </div>
         </div>
     </div>
@@ -40,11 +40,11 @@ export default {
                 email: null,
             },
             idArea: null,
-            formCarga: false,
+            isLoading: false,
             map: null,
             polygonCoords: [],
-            areaKilometros: 0,
-            colorArea: "yellow",
+            areaKilometers: 0,
+            areaColor: "yellow",
             unsuscribe: () => { },
         };
     },
@@ -52,31 +52,31 @@ export default {
         subscribeToAuth(user => this.user = { ...user });
         const poligons = JSON.parse(this.$route.query.poligons);
         const idArea = this.$route.query.id;
-        const colorArea = this.$route.query.colorArea;
+        const areaColor = this.$route.query.areaColor;
         this.polygonCoords = poligons;
         this.idArea = idArea;
-        this.colorArea = colorArea;
+        this.areaColor = areaColor;
         try {
             await googleMapsLoader.load();
             this.initMap();
         } catch (error) {
             console.error("Error al cargar la API de Google Maps", error);
         }
-        const area = this.calcularArea(this.polygonCoords);
-        this.areaKilometros = area / 1000000;
+        const area = this.calculateArea(this.polygonCoords);
+        this.areaKilometers = area / 1000000;
     },
     computed: {
         areaText() {
-            if (this.areaKilometros >= 0.99) {
-                return `Área: ${this.areaKilometros.toFixed(2)} km²`;
+            if (this.areaKilometers >= 0.99) {
+                return `Área: ${this.areaKilometers.toFixed(2)} km²`;
             } else {
-                const areaMetrosCuadrados = this.areaKilometros * 1000000;
-                return `Área: ${areaMetrosCuadrados.toFixed(2)} m²`;
+                const areaSquareMeters = this.areaKilometers * 1000000;
+                return `Área: ${areaSquareMeters.toFixed(2)} m²`;
             }
         },
     },
     methods: {
-        calcularArea(coords) {
+        calculateArea(coords) {
             const area = google.maps.geometry.spherical.computeArea(coords);
             return Math.abs(area);
         },
@@ -91,8 +91,8 @@ export default {
                 paths: this.polygonCoords,
                 editable: true,
                 draggable: true,
-                fillColor: this.colorArea,
-                strokeColor: this.colorArea,
+                fillColor: this.areaColor,
+                strokeColor: this.areaColor,
                 strokeWeight: 1,
             });
 
@@ -105,17 +105,15 @@ export default {
         },
         updateArea() {
             const polygon = this.polygon.getPath().getArray();
-            const area = this.calcularArea(polygon);
-            const areaKilometros = area / 1000000;
+            const area = this.calculateArea(polygon);
+            const areaKilometers = area / 1000000;
             this.polygonCoords = polygon;
-            this.areaKilometros = areaKilometros;
+            this.areaKilometers = areaKilometers;
         },
-
         async handleSubmit() {
             try {
-                this.formCarga = true;
-                // this.unsuscribe = subscribeToAuth(newUser => this.user = { ...newUser });
-                await UpdateArea(this.user.id, this.idArea, { poligons: JSON.stringify(this.polygonCoords), areaKilometros: this.areaKilometros, colorArea: this.colorArea });
+                this.isLoading = true;
+                await UpdateArea(this.user.id, this.idArea, { poligons: JSON.stringify(this.polygonCoords), areaKilometers: this.areaKilometers, areaColor: this.areaColor });
                 this.$router.push('/user/areas');
             } catch (error) {
                 console.log(error);

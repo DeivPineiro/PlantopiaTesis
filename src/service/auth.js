@@ -27,7 +27,7 @@ onAuthStateChanged(auth, async user => {
     }
 });
 
-export async function registrar({ email, password, rol }) {
+export async function register({ email, password, rol }) {
     try {
         const credencialesUsuario = await createUserWithEmailAndPassword(auth, email, password);
         CrearPerfilUsuario(credencialesUsuario.user.uid, { email, rol });
@@ -44,7 +44,7 @@ export async function registrar({ email, password, rol }) {
     }
 }
 
-export async function verificarEmailExistente(email) {
+export async function checkExistingEmail(email) {
     const q = query(collection(db, "usuarios"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     if (!querySnapshot.empty) {

@@ -8,7 +8,7 @@
                 </button>
             </router-link>
             <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
-            <div id="areaKilometros" class="info-map">
+            <div id="areaKilometers" class="info-map">
                 <p>{{ areaText }}</p>
             </div>
         </div>
@@ -73,8 +73,8 @@ export default {
                             paths: polygonCoords,
                             editable: false,
                             draggable: false,
-                            fillColor: area.colorArea,
-                            strokeColor: area.colorArea,
+                            fillColor: area.areaColor,
+                            strokeColor: area.areaColor,
                             strokeWeight: 1,
                         });
                         polygon.setMap(this.map);

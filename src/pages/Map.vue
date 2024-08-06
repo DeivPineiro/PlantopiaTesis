@@ -8,14 +8,14 @@
                 </button>
             </router-link>
             <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
-            <div id="areaKilometros" class="info-map">
+            <div id="areaKilometers" class="info-map">
                 <p>{{ areaText }}</p>
             </div>
         </div>
         <div id="mapContainer" class="vista-map">
             <div id="map" class="w-full h-full"></div>
             <div id="buttonContainer" class="finish-map">
-                <BaseButton @click="handleSubmit()" :cargando="formCarga" class="mt-10">Finalizar</BaseButton>
+                <BaseButton @click="handleSubmit()" :cargando="isLoading" class="mt-10">Finalizar</BaseButton>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
 import BaseH1 from "../components/BaseH1.vue";
 import BaseButton from '../components/BaseButton.vue';
 
-import { CreateArea } from "../service/area.js";
+import { createArea } from "../service/area.js";
 import { subscribeToAuth } from "./../service/auth.js";
 import googleMapsLoader from "../service/google-maps-config.js";
 
@@ -37,10 +37,10 @@ export default {
                 id: null,
                 email: null,
             },
-            formCarga: false,
+            isLoading: false,
             map: null,
             polygonCoords: [],
-            areaKilometros: 0,
+            areaKilometers: 0,
             unsuscribe: () => { },
         };
     },
@@ -54,16 +54,16 @@ export default {
     },
     computed: {
         areaText() {
-            if (this.areaKilometros >= 0.99) {
-                return `Área: ${this.areaKilometros.toFixed(2)} km²`;
+            if (this.areaKilometers >= 0.99) {
+                return `Área: ${this.areaKilometers.toFixed(2)} km²`;
             } else {
-                const areaMetrosCuadrados = this.areaKilometros * 1000000;
-                return `Área: ${areaMetrosCuadrados.toFixed(2)} m²`;
+                const areaSquareMeters = this.areaKilometers * 1000000;
+                return `Área: ${areaSquareMeters.toFixed(2)} m²`;
             }
         },
     },
     methods: {
-        calcularArea(coords) {
+        calculateArea(coords) {
             const area = google.maps.geometry.spherical.computeArea(coords);
             return Math.abs(area);
         },
@@ -99,8 +99,8 @@ export default {
                     });
 
                     this.polygon.setMap(map);
-                    const area = this.calcularArea(this.polygonCoords);
-                    this.areaKilometros = area / 1000000;
+                    const area = this.calculateArea(this.polygonCoords);
+                    this.areaKilometers = area / 1000000;
                     google.maps.event.addListenerOnce(map, 'tilesloaded', () => {
                         google.maps.event.addListener(this.polygon.getPath(), 'set_at', this.updateArea);
                         google.maps.event.addListener(this.polygon.getPath(), 'insert_at', this.updateArea);
@@ -111,16 +111,16 @@ export default {
         },
         updateArea() {
             const polygon = this.polygon.getPath().getArray();
-            const area = this.calcularArea(polygon);
-            const areaKilometros = area / 1000000;
+            const area = this.calculateArea(polygon);
+            const areaKilometers = area / 1000000;
             this.polygonCoords = polygon;
-            this.areaKilometros = areaKilometros;
+            this.areaKilometers = areaKilometers;
         },
         async handleSubmit() {
             try {
-                this.formCarga = true;
+                this.isLoading = true;
                 this.unsuscribe = subscribeToAuth(newUser => this.user = { ...newUser });
-                await CreateArea(this.user.id, { poligons: JSON.stringify(this.polygonCoords), areaKilometros: this.areaKilometros, idUser: this.user.id });
+                await createArea(this.user.id, { poligons: JSON.stringify(this.polygonCoords), areaKilometros: this.areaKilometers, idUser: this.user.id });
                 this.$router.push('/area');
             } catch (error) {
                 console.log(error);

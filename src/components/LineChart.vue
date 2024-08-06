@@ -31,8 +31,8 @@ export default {
         data: {
           labels: props.labels,
           datasets: [{
-            label: props.data.nombre,
-            data: props.data.valores,
+            label: props.data.name,
+            data: props.data.values,
             fill: false,
             borderColor: '#006633',
             tension: 0.1

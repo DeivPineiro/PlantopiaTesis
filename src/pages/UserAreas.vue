@@ -19,27 +19,27 @@
                 <div v-else>
                     <div class="box-cultivos" v-for="area in areas" :key="area.id">
                         <div class="">
-                            <p class="font-bold">Nombre: <span class="font-normal">{{ area.nombreCosecha }}</span></p>
-                            <p class="font-bold">Peso: <span class="font-normal">{{ area.pesoPorCosecha }} kg/km²</span>
+                            <p class="font-bold">Nombre: <span class="font-normal">{{ area.name }}</span></p>
+                            <p class="font-bold">Peso: <span class="font-normal">{{ area.weightPerHarvest }} kg/km²</span>
                             </p>
-                            <p class="font-bold">USD x t/km²: <span class="font-normal">${{ area.valorPorTonelada
+                            <p class="font-bold">USD x t/km²: <span class="font-normal">${{ area.valuePerTon
                                     }}</span></p>
-                            <p class="font-bold">Área: <span class="font-normal">{{ area.areaKilometros.toFixed(3) }}
+                            <p class="font-bold">Área: <span class="font-normal">{{ area.areaKilometers.toFixed(3) }}
                                     km²</span></p>
                             <p class="font-bold">Plantación: <span class="font-normal">{{
-                                    formatFecha(area.diaPlantacion) }}</span></p>
-                            <p class="font-bold">Cosecha: <span class="font-normal">{{ formatFecha(area.diaCosecha)
+                                    formatFecha(area.plantationDate) }}</span></p>
+                            <p class="font-bold">Cosecha: <span class="font-normal">{{ formatFecha(area.harvestDate)
                                     }}</span></p>
                             <div class="flex items-center">
                                 <p class="font-bold mr-2">Color:</p>
                                 <div class="w-6 h-6 mr-2"
-                                    :style="{ backgroundColor: area.colorArea, border: '1px solid #000' }"></div>
-                                <p class="font-normal">{{ traducirColor(area.colorArea) }}</p>
+                                    :style="{ backgroundColor: area.areaColor, border: '1px solid #000' }"></div>
+                                <p class="font-normal">{{ traducirColor(area.areaColor) }}</p>
                             </div>
                             <p class="font-bold text-green-700 mt-2">Valor total: <span
                                     class="font-normal text-black">USD {{
-                                        (((area.areaKilometros * area.pesoPorCosecha) / 1000) *
-                                            area.valorPorTonelada).toFixed(2) }}
+                                        (((area.areaKilometers * area.weightPerHarvest) / 1000) *
+                                            area.valuePerTon).toFixed(2) }}
                                 </span></p>
                         </div>
                         <div class="flex flex-col justify-between items-end">
@@ -47,8 +47,8 @@
                                 <button class="dropbtn rounded-full p-1"><span
                                         class="material-symbols-sharp">menu</span></button>
                                 <div class="dropdown-content">
-                                    <a @click="goToHarvest(area.id, area.areaKilometros)">Editar</a>
-                                    <a @click="goToMap(area.poligons, area.id, area.colorArea)">Ver</a>
+                                    <a @click="goToHarvest(area.id, area.areaKilometers)">Editar</a>
+                                    <a @click="goToMap(area.poligons, area.id, area.areaColor)">Ver</a>
                                     <a @click="delArea(this.user.id, area.id)">Eliminar</a>
                                 </div>
                             </div>
@@ -94,23 +94,23 @@ export default {
     },
     methods: {
         formatFecha,
-        goToMap(poligons, id, colorArea) {
+        goToMap(poligons, id, areaColor) {
             this.$router.push({
                 path: '/user/areas/irAMapa',
                 query: {
                     id: id,
                     poligons: poligons,
-                    colorArea: colorArea,
+                    areaColor: areaColor,
                 },
             });
         },
 
-        goToHarvest(idArea, areaKilometros) {
+        goToHarvest(idArea, areaKilometers) {
             this.$router.push({
                 path: '/user/areas/editAreas',
                 query: {
                     idArea: idArea,
-                    areaKilometros: areaKilometros,
+                    areaKilometers: areaKilometers,
                 },
             });
         },
