@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     <LineChart :labels="lineChart.labels" :data="lineChart.data" />
-                    <PieChart :labels="pieChart.labels" :data="pieChart.data" :backgroundColors="pieChart.colors" />
+                    <PieChart :labels="pieChart.labels" :data="pieChart.data" :backgroundColors="pieChart.colors" />                    
                 </div>
             </template>
         </div>

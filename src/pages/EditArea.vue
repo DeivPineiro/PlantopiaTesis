@@ -230,7 +230,7 @@ export default {
                 this.showNotificationMessage('error', 'Ingresá valores válidos y no vacíos para área, peso y valor.');
             } else {
                 this.result = ((area * weight) / 1000) * value;
-                this.showNotificationMessage('success', `Ganarías un aproximado de ${this.result.toFixed(2)} USD$`);
+                this.showNotificationMessage('success', `Ganarías un aproximado de USD ${this.result.toFixed(2)}`);
             }
         },
         showNotificationMessage(type, message) {

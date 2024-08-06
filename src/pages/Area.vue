@@ -224,23 +224,19 @@ export default {
         preCalculate() {            
             const area = parseFloat(this.lastArea.areaKilometros);
             const weight = parseFloat(this.weightPerHarvest);
-            const value = parseFloat(this.valuePerTon);
-
-           
+            const value = parseFloat(this.valuePerTon);           
 
             if (isNaN(area) || isNaN(weight) || isNaN(value) || !area || !weight || !value) {
                 this.showNotificationMessage('error', 'Ingresá valores válidos y no vacíos para área, peso y valor.');
             } else {
                 this.result = ((area * weight) / 1000) * value;
-                this.showNotificationMessage('success', `Ganarías un aproximado de ${this.result.toFixed(2)} USD$`);
-                console.log("IF-----> area:" , area, "peso:", weight, "value:", value );
+                this.showNotificationMessage('success', `Ganarías un aproximado de USD ${this.result.toFixed(2)}`);                
             }
         },
         showNotificationMessage(type, message) {
             this.showNotification = true;
             this.notificationType = type;
-            this.notificationMessage = message;
-            console.log("NOTI-----> SHOW:" , this.showNotification, "NOTI:", this.notificationType, "MESSA:", this.notificationMessage );
+            this.notificationMessage = message;           
             setTimeout(() => {
                 this.hideNotification();
             }, 5000);

@@ -1,6 +1,7 @@
 <template>
     <div class="piechart">
         <canvas ref="pieChart"></canvas>
+        
     </div>
 </template>
 
@@ -50,6 +51,7 @@ export default {
                         },
                         tooltip: {
                             callbacks: {
+                                
 
                             }
                         }
