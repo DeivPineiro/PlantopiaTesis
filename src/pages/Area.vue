@@ -1,11 +1,9 @@
 <template>
     <section class="h-screen">
         <div class="header-map">
-            <router-link to="/home" class="back-map">
-                <button class="btn-amarillo">
-                    <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
-                </button>
-            </router-link>
+            <button class="btn-amarillo" @click="goHome">
+                <span class="material-symbols-sharp back-icon">arrow_back_ios</span>Atrás
+            </button>
             <div class="logo-map"><img src="/imgs/logo.png" alt="Logo Plantopia" class=""></div>
         </div>
         <div class="container px-4 mx-auto div-form fondo-blanco">
@@ -14,7 +12,7 @@
             </div>
             <div v-if="lastArea">
                 <p class="slogan-form">Área seleccionada <span> {{
-                    lastArea.areaKilometers.toFixed(3) }}
+                    lastArea.areaKilometros.toFixed(3) }}
                         km²</span></p>
                 <p class="mb-4 w-full text-white hidden">Coordenadas: {{ lastArea.poligons }}</p>
             </div>
@@ -59,7 +57,7 @@
                         </select>
                     </div>
                     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
-                    <button @click="preCalculate" class="btn-amarillo mb-6">Precalcular</button>
+                    <button @click.prevent="preCalculate" class="btn-amarillo mb-6">Precalcular</button>
                     <div>
                         <Notificacion v-if="showNotification" :type="notificationType" :message="notificationMessage" />
                     </div>
@@ -78,7 +76,7 @@ import BaseButton from '../components/BaseButton.vue';
 import Notificacion from '../components/Notificacion.vue';
 
 import { subscribeToAuth } from "./../service/auth.js";
-import { lastAreaById, addNewDataArea } from "./../service/area.js";
+import { lastAreaById, addNewDataArea, deleteArea } from "./../service/area.js";
 
 import router from '../router/router.js';
 
@@ -203,7 +201,7 @@ export default {
                 const error = new Error();
                 error.code = 'auth/invalid-plantationDate';
                 throw error;
-            } else if (!data.harvestDate) {
+            } else if (!data.harvestDate) {               
                 const error = new Error();
                 error.code = 'auth/missing-harvestDate';
                 throw error;
@@ -221,22 +219,26 @@ export default {
                 }
             }
         },
-        preCalculate() {
-            const area = parseFloat(this.lastArea.areaKilometers);
+        preCalculate() {            
+            const area = parseFloat(this.lastArea.areaKilometros);
             const weight = parseFloat(this.weightPerHarvest);
             const value = parseFloat(this.valuePerTon);
+
+           
 
             if (isNaN(area) || isNaN(weight) || isNaN(value) || !area || !weight || !value) {
                 this.showNotificationMessage('error', 'Ingresá valores válidos y no vacíos para área, peso y valor.');
             } else {
                 this.result = ((area * weight) / 1000) * value;
                 this.showNotificationMessage('success', `Ganarías un aproximado de ${this.result.toFixed(2)} USD$`);
+                console.log("IF-----> area:" , area, "peso:", weight, "value:", value );
             }
         },
         showNotificationMessage(type, message) {
             this.showNotification = true;
             this.notificationType = type;
             this.notificationMessage = message;
+            console.log("NOTI-----> SHOW:" , this.showNotification, "NOTI:", this.notificationType, "MESSA:", this.notificationMessage );
             setTimeout(() => {
                 this.hideNotification();
             }, 5000);
@@ -245,6 +247,12 @@ export default {
             this.showNotification = false;
             this.notificationType = '';
             this.notificationMessage = '';
+        },
+        async goHome() {
+            if (this.user.id && this.lastArea && this.lastArea.id) {
+                await deleteArea(this.user.id, this.lastArea.id);
+            }
+            router.push('/home');
         },
     },
 }

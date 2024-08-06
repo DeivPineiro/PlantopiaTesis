@@ -143,7 +143,9 @@ export default {
                     date = new Date(area.harvestDate);
                     if (date) {
                         const month = date.getMonth();
-                        areasByMonth[month].push(area);
+                        if (areasByMonth[month]) {
+                            areasByMonth[month].push(area);
+                        }
                     }
                 });
             }
